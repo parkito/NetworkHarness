@@ -1,3 +1,13 @@
+syntax: glob
+*.idea
+target
+*.iml
+\.orig\..*$
+\.orig$
+\.chg\..*$
+\.rej$
+\.conflict\~$
+
 *.class
 
 # Mobile Tools for Java (J2ME)
