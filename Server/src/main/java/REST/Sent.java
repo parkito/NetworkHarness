@@ -1,7 +1,5 @@
-package com.example;
+package REST;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
 
 /**

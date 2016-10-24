@@ -1,8 +1,7 @@
-package com.example;
+package REST;
 
 import com.owlike.genson.Genson;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,8 +19,7 @@ public class First {
     public Response convertFtoC() throws JSONException {
         Genson genson = new Genson();
         Sent sent = new Sent("myData");
-        JSONObject jsonObject = new JSONObject();
-        String rezult = genson.serialize(sent);
-        return Response.status(200).entity(rezult).build();
+        String result = genson.serialize(sent);
+        return Response.status(200).entity(result).build();
     }
 }
