@@ -1,3 +1,5 @@
+package com.example;
+
 /**
  * Created by Artyom Karnov on 10/24/16.
  * artyom-karnov@yandex.ru
