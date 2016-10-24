@@ -15,11 +15,12 @@ import javax.ws.rs.core.Response;
 @Path("/my")
 public class First {
     @GET
-    @Produces("application/xml")
+    @Produces("application/json")
     public Response convertFtoC() throws JSONException {
         Sent sent = new Sent("myData");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("Data", sent);
-        return Response.status(200).entity(jsonObject).build();
+        System.out.println(jsonObject.toString());
+        return Response.status(200).entity(sent).build();
     }
 }

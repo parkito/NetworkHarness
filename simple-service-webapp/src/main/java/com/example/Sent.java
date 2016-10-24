@@ -1,5 +1,7 @@
 package com.example;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
 
 /**
@@ -19,5 +21,12 @@ public class Sent implements Serializable {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Sent{" +
+                "data='" + data + '\'' +
+                '}';
     }
 }
