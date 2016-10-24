@@ -1,5 +1,6 @@
 package com.example;
 
+import com.owlike.genson.Genson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,10 +18,10 @@ public class First {
     @GET
     @Produces("application/json")
     public Response convertFtoC() throws JSONException {
+        Genson genson = new Genson();
         Sent sent = new Sent("myData");
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("Data", sent);
-        System.out.println(jsonObject.toString());
-        return Response.status(200).entity(sent).build();
+        String rezult = genson.serialize(sent);
+        return Response.status(200).entity(rezult).build();
     }
 }
