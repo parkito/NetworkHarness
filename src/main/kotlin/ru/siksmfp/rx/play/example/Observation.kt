@@ -14,7 +14,7 @@ fun main() {
         try {
             println(Thread.currentThread().name)
             for (entity in Db.getEntities()) {
-                if (entity.age == 4) {
+                if (entity.age == 2) {
                     throw IllegalStateException("Exception occurred while processing $entity")
                 }
                 emitter.onNext(entity)
@@ -23,9 +23,12 @@ fun main() {
         } catch (e: Exception) {
             emitter.onError(e)
         }
-    }
+    }.filter { e -> e.age > 0 }
 
     entityObservable.subscribe(printEntityOnNext, printExMessage, { print("completed") })
     entityObservable.subscribe(printFormattedEntityOnNext, printExMessage, { print("completed") })
     entityObservable.subscribe { print("completed") }
+
+    entityObservable.scan { t1: Entity, t2: Entity -> t2 }
+            .subscribe(printFormattedEntityOnNext, printExMessage, { print("completed") })
 }
