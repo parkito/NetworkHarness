@@ -2,7 +2,6 @@ package ru.siksmfp.rx.play.example
 
 import io.reactivex.Observable
 
-
 //Single is like an Observable that,
 // instead of emitting a series of values,
 // emits one value or an error notification.
@@ -18,7 +17,7 @@ fun main() {
             .doOnError { error: Throwable -> print(error.message) }
 
     try {
-        single.subscribe { e -> println("On success $e") } //BE CAREFUL. Exception throws in different thread
+        single.subscribe { e -> println("On success $e") } //BE CAREFUL. Exception throws in different thread. You can't catch it
     } catch (ex: Exception) {
         println("Exception")
     } finally {
