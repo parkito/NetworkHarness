@@ -6,6 +6,7 @@ val appArchiveName = "rx-$version"
 plugins {
     application
     kotlin("jvm") version "1.3.21"
+    java
 }
 
 java {
