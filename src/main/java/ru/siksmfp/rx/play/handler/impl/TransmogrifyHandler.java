@@ -22,6 +22,9 @@ public class TransmogrifyHandler implements Handler<Socket> {
     }
 
     private int transmogrify(int data) {
+        if (data == '$'){
+            throw new IllegalStateException("Error");
+        }
         return Character.isLetter(data) ? data ^ ' ' : data;
     }
 }
