@@ -1,8 +1,8 @@
-package ru.siksmfp.rx.play.io;
+package ru.siksmfp.rx.play.server.io;
 
-import ru.siksmfp.rx.play.handler.impl.PooledHandler;
-import ru.siksmfp.rx.play.handler.impl.PrintableHandler;
-import ru.siksmfp.rx.play.handler.impl.TransmogrifyHandler;
+import ru.siksmfp.rx.play.handler.impl.io.PooledHandler;
+import ru.siksmfp.rx.play.handler.impl.io.PrintableHandler;
+import ru.siksmfp.rx.play.handler.impl.io.TransmogrifyHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;

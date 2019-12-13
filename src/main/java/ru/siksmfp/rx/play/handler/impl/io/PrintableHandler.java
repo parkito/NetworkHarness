@@ -1,4 +1,4 @@
-package ru.siksmfp.rx.play.handler.impl;
+package ru.siksmfp.rx.play.handler.impl.io;
 
 import ru.siksmfp.rx.play.handler.api.DecoratedHandler;
 import ru.siksmfp.rx.play.handler.api.Handler;

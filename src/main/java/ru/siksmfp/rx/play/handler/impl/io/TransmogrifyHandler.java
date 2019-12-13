@@ -1,4 +1,4 @@
-package ru.siksmfp.rx.play.handler.impl;
+package ru.siksmfp.rx.play.handler.impl.io;
 
 import ru.siksmfp.rx.play.handler.api.Handler;
 
@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+
+import static ru.siksmfp.rx.play.utils.TransmogrifyUtils.transmogrify;
 
 public class TransmogrifyHandler implements Handler<Socket> {
 
@@ -19,12 +21,5 @@ public class TransmogrifyHandler implements Handler<Socket> {
                 os.write(transmogrify(data));
             }
         }
-    }
-
-    private int transmogrify(int data) {
-        if (data == '$'){
-            throw new IllegalStateException("Error");
-        }
-        return Character.isLetter(data) ? data ^ ' ' : data;
     }
 }
