@@ -8,16 +8,23 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ExecutorService;
 
 import static java.nio.channels.SelectionKey.OP_WRITE;
 import static ru.siksmfp.rx.play.utils.TransmogrifyUtils.transmogrify;
 
-public class ReadHandler implements Handler<SelectionKey> {
+public class PooleadReadHandler implements Handler<SelectionKey> {
 
     private Map<SocketChannel, Queue<ByteBuffer>> pendingData;
+    private ExecutorService executorService;
+    private Queue<Runnable> selectorAction;
 
-    public ReadHandler(Map<SocketChannel, Queue<ByteBuffer>> pendingData) {
+    public PooleadReadHandler(Map<SocketChannel, Queue<ByteBuffer>> pendingData,
+                              ExecutorService executorService,
+                              Queue<Runnable> selectorActions) {
         this.pendingData = pendingData;
+        this.executorService = executorService;
+        this.selectorAction = selectorActions;
     }
 
     @Override
@@ -34,9 +41,13 @@ public class ReadHandler implements Handler<SelectionKey> {
         }
 
         if (read > 0) {
-            transmogrify(bb);
-            pendingData.get(sc).add(bb);
-            selectionKey.interestOps(OP_WRITE);
+            executorService.submit(() -> {
+                        transmogrify(bb);
+                        pendingData.get(sc).add(bb);
+                        selectorAction.add(() -> selectionKey.interestOps(OP_WRITE));
+                        selectionKey.selector().wakeup();
+                    }
+            );
         }
     }
 }
