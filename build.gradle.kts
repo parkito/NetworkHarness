@@ -1,4 +1,4 @@
-group = "ru.siksmfp.rx.play"
+group = "ru.siksmfp.network.play"
 version = "0.1.1"
 
 val appArchiveName = "rx-$version"
@@ -14,13 +14,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-//application {
-//    mainClassName = "samples.HelloWorldKt"
-//}
-
 dependencies {
     compile(kotlin("stdlib"))
-    compile("org.springframework:spring-context:5.1.6.RELEASE")
     compile("javax.annotation:javax.annotation-api:1.3.2")
     compile("io.reactivex.rxjava2:rxjava:2.2.8")
     implementation ("org.jetbrains.kotlin:kotlin-reflect:1.3.20")
