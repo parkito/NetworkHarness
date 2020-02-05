@@ -14,36 +14,37 @@ class IoClient(
     private lateinit var bufferedReader: BufferedReader
     private lateinit var clientSocket: Socket
 
-    fun publish(message: String) {
-        printWriter.println(message)
-
-        val response = bufferedReader.readLine()
-        println("Publisher: received $response")
-
-        bufferedReader.close()
-        printWriter.close()
-        clientSocket.close()
-    }
-
     fun start() {
         println("Connecting client to $host:$port")
+        clientSocket = Socket(host, port)
         printWriter = PrintWriter(clientSocket.getOutputStream(), true)
         bufferedReader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
-        clientSocket = Socket(host, port)
         println("Connected to $host:$port")
     }
 
     fun send(line: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("Sending $line")
+        printWriter.println(line)
+
+        val response = bufferedReader.readLine()
+        println("Publisher: received $response")
     }
 
     fun test() {
+        printWriter.println("test")
 
-
+        val response = bufferedReader.readLine()
+        if (response == "OK") {
+            println("Test passed")
+        } else {
+            throw IllegalStateException("Sending test is failed")
+        }
     }
 
     fun destroy() {
-
+        bufferedReader.close()
+        printWriter.close()
+        clientSocket.close()
     }
 }
 
