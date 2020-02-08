@@ -1,4 +1,4 @@
-package ru.siksmfp.network.play.tcp.io
+package ru.siksmfp.network.play.tcp.io.simple
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -17,22 +17,23 @@ class IoClient(
     fun start() {
         println("Connecting client to $host:$port")
         clientSocket = Socket(host, port)
-        printWriter = PrintWriter(clientSocket.getOutputStream(), true)
+        printWriter = PrintWriter(clientSocket.getOutputStream(), false)
         bufferedReader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
         println("Connected to $host:$port")
     }
 
-    fun send(line: String?) {
+    fun send(line: String) {
         println("Sending $line")
         printWriter.println(line)
-
+        printWriter.flush()
         val response = bufferedReader.readLine()
         println("Publisher: received $response")
     }
 
     fun test() {
+        println("Start testing")
         printWriter.println("test")
-
+        printWriter.flush()
         val response = bufferedReader.readLine()
         if (response == "OK") {
             println("Test passed")
