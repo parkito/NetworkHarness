@@ -24,7 +24,7 @@ class FileGenerator {
             throw IllegalStateException("Can't create a file with tests")
         }
 
-        val fileWriter = testFile.printWriter()
+        val fileWriter = testFile.bufferedWriter()
 
         for (i in 0 until STRING_NUMBER) {
             val row = "$i.) ${generateRandomString()}\n"
