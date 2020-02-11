@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import static ru.siksmfp.network.play.champ.utils.TransmogrifyUtils.transmogrify;
-
-public class NioTransmogrifyHandler implements Handler<SocketChannel> {
+public class IoTransmogrifyHandler implements Handler<SocketChannel> {
 
     public void handle(SocketChannel socket) throws IOException {
         ByteBuffer bb = ByteBuffer.allocateDirect(80);

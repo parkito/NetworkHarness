@@ -32,7 +32,7 @@ class IoServer(
 
             println("IoServer: sending response OK")
             printWriter = PrintWriter(client.getOutputStream(), false)
-            printWriter.write("OK")
+            printWriter.println("OK")
             printWriter.flush()
         }
     }

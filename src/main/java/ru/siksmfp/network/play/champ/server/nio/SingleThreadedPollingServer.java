@@ -1,7 +1,7 @@
 package ru.siksmfp.network.play.champ.server.nio;
 
 import ru.siksmfp.network.play.champ.handler.api.Handler;
-import ru.siksmfp.network.play.champ.handler.impl.io.NioTransmogrifyHandler;
+import ru.siksmfp.network.play.champ.handler.impl.io.IoTransmogrifyHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,7 +13,7 @@ import java.util.Collection;
 public class SingleThreadedPollingServer {
 
     public static void main(String[] args) throws IOException {
-        Handler<SocketChannel> handler = new NioTransmogrifyHandler();
+        Handler<SocketChannel> handler = new IoTransmogrifyHandler();
 
         ServerSocketChannel ss = ServerSocketChannel.open();
         ss.bind(new InetSocketAddress(8081));

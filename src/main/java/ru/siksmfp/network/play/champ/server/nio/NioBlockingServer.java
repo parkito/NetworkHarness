@@ -1,6 +1,6 @@
 package ru.siksmfp.network.play.champ.server.nio;
 
-import ru.siksmfp.network.play.champ.handler.impl.io.NioTransmogrifyHandler;
+import ru.siksmfp.network.play.champ.handler.impl.io.IoTransmogrifyHandler;
 import ru.siksmfp.network.play.champ.handler.impl.io.PrintableHandler;
 import ru.siksmfp.network.play.champ.handler.impl.io.ThreadedHandler;
 import ru.siksmfp.network.play.champ.handler.impl.nio.NioBlockingConnectionHandler;
@@ -16,7 +16,7 @@ public class NioBlockingServer {
         ThreadedHandler<SocketChannel> handler = new ThreadedHandler<>(
                 new PrintableHandler<>(
                         new NioBlockingConnectionHandler(
-                                new NioTransmogrifyHandler()
+                                new IoTransmogrifyHandler()
                         )
                 )
         );
