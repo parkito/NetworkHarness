@@ -4,7 +4,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 class FileReader(
-        private val filename: String
+        filename: String
 ) {
     private val reader = Files.newBufferedReader(Paths.get(filename))
 

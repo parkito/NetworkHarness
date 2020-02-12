@@ -2,18 +2,43 @@ package ru.siksmfp.network.play.tcp.testing
 
 import ru.siksmfp.network.play.api.Client
 import ru.siksmfp.network.play.api.Server
+import java.util.concurrent.Executors
+import kotlin.reflect.KClass
 
 class TestExecutor(
-        private val server: Server,
-        private val clients: List<Client>,
-        private val testFile:String
+        private val serverClass: KClass<out Any>,
+        private val clientClass: KClass<out Any>,
+        private val testFile: String
 ) {
+    private val fileReader = FileReader(testFile)
+    private val fileWriter = FileWriter("/Users/parkito/Downloads/temp.txt")
+    private val executor = Executors.newFixedThreadPool(15)
+    private val messageInterceptor = MessageInterceptor(fileWriter)
 
     fun executeTest() {
-
+        val serverClassConstructor = serverClass.constructors.toList()[0]
+        val serverInstance = serverClassConstructor.call(8081) as Server<*>
+        serverInstance.start()
     }
 
-    private fun performTest() {
+    private fun performTest(server: Server<String>, clients: List<Client<String>>) {
+        server.start()
+        clients.forEach { it.start() }
+        var currentClient = 0
+        do {
+            val string = fileReader.getString()
+            if (string != null) {
+                executor.execute {
+                    clients[currentClient].send(string)
+                }
+                currentClient++
+            }
+
+            if (currentClient >= clients.size) {
+                currentClient = 0
+            }
+
+        } while (string != null)
 
     }
 

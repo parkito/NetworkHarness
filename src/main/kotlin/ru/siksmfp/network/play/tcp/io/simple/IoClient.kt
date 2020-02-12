@@ -10,7 +10,7 @@ import java.util.*
 class IoClient(
         private val host: String,
         private val port: Int
-) : Client {
+) : Client<String> {
     private lateinit var printWriter: PrintWriter
     private lateinit var bufferedReader: BufferedReader
     private lateinit var clientSocket: Socket

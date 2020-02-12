@@ -1,8 +1,10 @@
 package ru.siksmfp.network.play.api
 
-interface Server {
+interface Server<T> {
 
     fun start()
 
     fun stop()
+
+    fun setHandler(handler: Handler<T>)
 }

@@ -1,5 +1,6 @@
 package ru.siksmfp.network.play.tcp.io.simple
 
+import ru.siksmfp.network.play.api.Handler
 import ru.siksmfp.network.play.api.Server
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -9,7 +10,8 @@ import java.net.Socket
 
 class IoServer(
         private val port: Int
-) : Server {
+) : Server<String> {
+    private val handler: Handler<String>? = null
 
     override fun start() {
         val serverSocket = ServerSocket(port)
@@ -26,6 +28,10 @@ class IoServer(
         //todo  implement
     }
 
+    override fun setHandler(handler: Handler<String>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun handleClient(client: Socket) {
         println("Client connected " + client.port)
         var printWriter: PrintWriter
@@ -34,6 +40,7 @@ class IoServer(
             bufferedReader = BufferedReader(InputStreamReader(client.getInputStream()))
 
             val received = bufferedReader.readLine()
+            handler?.handle(received)
             println("IoServer: received $received")
 
             println("IoServer: sending response OK")

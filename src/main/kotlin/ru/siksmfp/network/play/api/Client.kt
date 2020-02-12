@@ -1,8 +1,8 @@
 package ru.siksmfp.network.play.api
 
-interface Client {
+interface Client<T> {
 
     fun start()
 
-    fun send(message: String)
+    fun send(message: T)
 }
