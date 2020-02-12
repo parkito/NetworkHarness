@@ -2,7 +2,7 @@ package ru.siksmfp.network.play.api
 
 interface Client {
 
-    fun start(host:String, port:String)
+    fun start()
 
-    fun sendMessage(message:String)
+    fun send(message: String)
 }

@@ -1,0 +1,14 @@
+package ru.siksmfp.network.play.tcp.testing
+
+import java.nio.file.Files
+import java.nio.file.Paths
+
+class FileReader(
+        private val filename: String
+) {
+    private val reader = Files.newBufferedReader(Paths.get(filename))
+
+    fun getString(): String? {
+        return reader.readLine()
+    }
+}

@@ -1,5 +1,6 @@
 package ru.siksmfp.network.play.tcp.io.simple
 
+import ru.siksmfp.network.play.api.Server
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
@@ -8,8 +9,9 @@ import java.net.Socket
 
 class IoServer(
         private val port: Int
-) {
-    fun start() {
+) : Server {
+
+    override fun start() {
         val serverSocket = ServerSocket(port)
         println("Server started on $port")
         while (true) {
@@ -18,6 +20,10 @@ class IoServer(
                 handleClient(client)
             }.start()
         }
+    }
+
+    override fun stop() {
+        //todo  implement
     }
 
     private fun handleClient(client: Socket) {
