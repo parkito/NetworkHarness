@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 group = "ru.siksmfp.network.play"
 version = "0.1.1"
 
@@ -31,4 +33,8 @@ val jar by tasks.getting(Jar::class) {
     archiveName = "$appArchiveName.jar"
     into("META-INF") {
     }
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "11"
 }

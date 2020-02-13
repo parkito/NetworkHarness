@@ -17,12 +17,17 @@ class TestExecutor(
 
     fun executeTest() {
         val serverClassConstructor = serverClass.constructors.toList()[0]
-        val serverInstance = serverClassConstructor.call(8081) as Server<*>
-        serverInstance.start()
+        val clientClassConstructor = clientClass.constructors.toList()[0]
+        val serverInstance = serverClassConstructor.call(8081) as Server<String>
+        val clients = IntRange(0, 100)
+                .map { clientClassConstructor.call("localhost", 8081) as Client<String> }
+                .toList()
+
+        performTest(serverInstance, clients)
     }
 
     private fun performTest(server: Server<String>, clients: List<Client<String>>) {
-        server.start()
+        executor.execute { server.start() }
         clients.forEach { it.start() }
         var currentClient = 0
         do {
