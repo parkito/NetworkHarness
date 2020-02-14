@@ -23,12 +23,20 @@ class IoClient(
         println("Connected to $host:$port")
     }
 
+    @Synchronized
     override fun send(message: String) {
         println("Sending $message")
         printWriter.println(message)
         printWriter.flush()
         val response = bufferedReader.readLine()
         println("Publisher: received $response")
+    }
+
+    override fun stop() {
+        println("Stopping client")
+        bufferedReader.close()
+        printWriter.close()
+        clientSocket.close()
     }
 
     fun test() {
