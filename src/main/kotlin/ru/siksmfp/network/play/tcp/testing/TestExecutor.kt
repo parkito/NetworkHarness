@@ -10,9 +10,9 @@ class TestExecutor(
         private val clientClass: KClass<out Any>,
         private val testFile: String
 ) {
-    private val fileReader = FileReader(testFile)
-    private val fileWriter = FileWriter("/Users/parkito/Downloads/temp.txt")
-    private val executor = Executors.newFixedThreadPool(15)
+    private val tempFileName = "/Users/parkito/Downloads/temp.txt"
+    private val fileWriter = FileWriter(tempFileName)
+    private val executor = Executors.newFixedThreadPool(5)
     private val messageInterceptor = MessageInterceptor(fileWriter)
 
     fun executeTest() {
@@ -27,27 +27,43 @@ class TestExecutor(
     }
 
     private fun performTest(server: Server<String>, clients: List<Client<String>>) {
+        val fileReader = FileReader(testFile)
+        server.setHandler(messageInterceptor)
         executor.execute { server.start() }
         clients.forEach { it.start() }
+
         var currentClient = 0
-        do {
-            val string = fileReader.getString()
-            if (string != null) {
-                executor.execute {
-                    clients[currentClient].send(string)
-                }
+        var string = fileReader.getString()
+        while (string != null) {
+            executor.execute {
+                clients[currentClient].send(string!!)
                 currentClient++
             }
 
             if (currentClient >= clients.size) {
                 currentClient = 0
             }
-
-        } while (string != null)
-
+            string = fileReader.getString()
+        }
     }
 
     private fun compareResult() {
-
+        val testFileReader = FileReader(testFile)
+        val testFileRow = testFileReader.getString()
+        while (testFileRow != null) {
+            val tempFileReader = FileReader(tempFileName)
+            var tempFileRow = tempFileReader.getString()
+            var isTestRowFound = false
+            while (tempFileRow != null) {
+                if (testFileRow == tempFileRow) {
+                    isTestRowFound = true
+                    break
+                }
+                tempFileRow = tempFileReader.getString()
+            }
+            if (!isTestRowFound) {
+                throw IllegalStateException("Files are different")
+            }
+        }
     }
 }

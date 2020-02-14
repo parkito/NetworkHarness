@@ -1,12 +1,12 @@
 package ru.siksmfp.network.play.tcp.testing
 
-import ru.siksmfp.network.play.champ.handler.api.Handler
+import ru.siksmfp.network.play.api.Handler
 
 class MessageInterceptor(
         private val fileWriter: FileWriter
 ) : Handler<String> {
 
-    override fun handle(message: String) {
-        fileWriter.writeRow(message)
+    override fun handle(t: String) {
+        fileWriter.writeRow(t)
     }
 }

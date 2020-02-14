@@ -7,20 +7,22 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.ServerSocket
 import java.net.Socket
+import java.util.concurrent.Executors
 
 class IoServer(
         private val port: Int
 ) : Server<String> {
-    private val handler: Handler<String>? = null
+    private var handler: Handler<String>? = null
+    private val executor = Executors.newFixedThreadPool(10)
 
     override fun start() {
         val serverSocket = ServerSocket(port)
         println("Server started on $port")
         while (true) {
             val client = serverSocket.accept()
-            Thread {
+            executor.submit {
                 handleClient(client)
-            }.start()
+            }
         }
     }
 
@@ -29,7 +31,7 @@ class IoServer(
     }
 
     override fun setHandler(handler: Handler<String>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.handler = handler
     }
 
     private fun handleClient(client: Socket) {
@@ -43,9 +45,9 @@ class IoServer(
             handler?.handle(received)
             println("IoServer: received $received")
 
-            println("IoServer: sending response OK")
             printWriter = PrintWriter(client.getOutputStream(), false)
             printWriter.println("OK")
+            println("IoServer: sending response OK")
             printWriter.flush()
         }
     }
