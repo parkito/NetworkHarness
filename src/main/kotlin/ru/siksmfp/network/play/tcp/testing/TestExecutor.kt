@@ -3,6 +3,7 @@ package ru.siksmfp.network.play.tcp.testing
 import ru.siksmfp.network.play.api.Client
 import ru.siksmfp.network.play.api.Server
 import java.time.LocalDateTime
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -37,11 +38,14 @@ class TestExecutor(
 
         var currentClient = 0
         var string = fileReader.getString()
+        val latch = CountDownLatch(fileReader.getLinesNumber().toInt())
         while (string != null) {
+            println(string)
             val immutableString = string
             val immutableClientNumber = currentClient
             executor.execute {
                 clients[immutableClientNumber].send(immutableString)
+                latch.countDown()
             }
             currentClient++
 
@@ -49,12 +53,10 @@ class TestExecutor(
                 currentClient = 0
             }
             string = fileReader.getString()
+            println(string)
         }
-
-        while (!executor.isTerminated) {
-//            println("Busy spinning")
-        }
-
+        println("to wait")
+        latch.await()
         executor.shutdown()
         server.stop()
         clients.forEach { it.stop() }
