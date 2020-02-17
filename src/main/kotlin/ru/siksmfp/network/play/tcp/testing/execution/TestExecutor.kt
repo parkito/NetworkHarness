@@ -2,16 +2,15 @@ package ru.siksmfp.network.play.tcp.testing.execution
 
 import ru.siksmfp.network.play.api.Client
 import ru.siksmfp.network.play.api.Server
-import ru.siksmfp.network.play.tcp.testing.support.MessageInterceptor
-import ru.siksmfp.network.play.tcp.testing.support.NamedThreadFactory
 import ru.siksmfp.network.play.tcp.testing.file.FileReader
 import ru.siksmfp.network.play.tcp.testing.file.FileWriter
+import ru.siksmfp.network.play.tcp.testing.support.MessageInterceptor
+import ru.siksmfp.network.play.tcp.testing.support.NamedThreadFactory
 import ru.siksmfp.network.play.tcp.testing.support.getHomeFolderPath
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.KClass
 
 class TestExecutor(
@@ -33,7 +32,7 @@ class TestExecutor(
                 .toList()
 
         performTest(serverInstance, clients)
-        compareResult()
+        FileComparator(testFile, tempFileName).compare()
     }
 
     private fun performTest(server: Server<String>, clients: List<Client<String>>) {
@@ -44,8 +43,8 @@ class TestExecutor(
         clients.forEach { it.start() }
 
         var currentClient = 0
-        var string = fileReader.getString()
-        val latch = CountDownLatch(fileReader.getLinesNumber().toInt())
+        var string = fileReader.nextLine()
+        val latch = CountDownLatch(fileReader.lineAmount().toInt())
         while (string != null) {
             println(string)
             val immutableString = string
@@ -59,7 +58,7 @@ class TestExecutor(
             if (currentClient == clients.size) {
                 currentClient = 0
             }
-            string = fileReader.getString()
+            string = fileReader.nextLine()
             println(string)
         }
         println("to wait")
@@ -71,46 +70,5 @@ class TestExecutor(
 
         val finish = System.nanoTime()
         println(TimeUnit.NANOSECONDS.toMillis(finish - start))
-    }
-
-    private fun compareResult() {
-        val executor = Executors.newFixedThreadPool(10, NamedThreadFactory("checker"))
-        println("Start file checking")
-        val testFileReader = FileReader(testFile)
-        val linesNumber = testFileReader.getLinesNumber()
-        val latch = CountDownLatch(linesNumber.toInt())
-        val noError = AtomicBoolean(true)
-        for (i in 0..linesNumber) {
-            val testFileRow = testFileReader.getString()
-            executor.execute {
-                val tempFileReader = FileReader(tempFileName)
-                var tempFileRow = tempFileReader.getString()
-                var isTestRowFound = false
-                while (tempFileRow != null) {
-                    if (testFileRow == tempFileRow) {
-                        isTestRowFound = true
-                        break
-                    }
-                    tempFileRow = tempFileReader.getString()
-                }
-                tempFileReader.close()
-                latch.countDown()
-                if (!isTestRowFound) {
-                    noError.set(true)
-                    println(testFileRow)
-                    throw IllegalStateException("Files are different")
-                }
-            }
-        }
-
-        while (latch.count > 0 && noError.get()) {
-            println(latch.count)
-        }
-        executor.shutdown()
-        if (noError.get()) {
-            print("Files are equal")
-        } else {
-            print("Files are different")
-        }
     }
 }

@@ -8,11 +8,11 @@ class FileReader(
 ) {
     private val reader = Files.newBufferedReader(Paths.get(filename))
 
-    fun getString(): String? {
+    fun nextLine(): String? {
         return reader.readLine()
     }
 
-    fun getLinesNumber(): Long {
+    fun lineAmount(): Long {
         return Files.newBufferedReader(Paths.get(filename))
                 .lines()
                 .count()
