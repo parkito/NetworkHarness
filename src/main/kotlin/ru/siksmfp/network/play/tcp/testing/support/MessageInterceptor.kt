@@ -1,6 +1,7 @@
-package ru.siksmfp.network.play.tcp.testing
+package ru.siksmfp.network.play.tcp.testing.support
 
 import ru.siksmfp.network.play.api.Handler
+import ru.siksmfp.network.play.tcp.testing.file.FileWriter
 
 class MessageInterceptor(
         private val fileWriter: FileWriter

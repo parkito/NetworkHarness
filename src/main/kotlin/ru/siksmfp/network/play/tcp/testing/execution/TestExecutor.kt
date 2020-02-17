@@ -1,7 +1,12 @@
-package ru.siksmfp.network.play.tcp.testing
+package ru.siksmfp.network.play.tcp.testing.execution
 
 import ru.siksmfp.network.play.api.Client
 import ru.siksmfp.network.play.api.Server
+import ru.siksmfp.network.play.tcp.testing.support.MessageInterceptor
+import ru.siksmfp.network.play.tcp.testing.support.NamedThreadFactory
+import ru.siksmfp.network.play.tcp.testing.file.FileReader
+import ru.siksmfp.network.play.tcp.testing.file.FileWriter
+import ru.siksmfp.network.play.tcp.testing.support.getHomeFolderPath
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -69,7 +74,7 @@ class TestExecutor(
     }
 
     private fun compareResult() {
-        val executor = Executors.newFixedThreadPool(5, NamedThreadFactory("checker"))
+        val executor = Executors.newFixedThreadPool(10, NamedThreadFactory("checker"))
         println("Start file checking")
         val testFileReader = FileReader(testFile)
         val linesNumber = testFileReader.getLinesNumber()
@@ -77,7 +82,6 @@ class TestExecutor(
         val noError = AtomicBoolean(true)
         for (i in 0..linesNumber) {
             val testFileRow = testFileReader.getString()
-            println(testFileRow)
             executor.execute {
                 val tempFileReader = FileReader(tempFileName)
                 var tempFileRow = tempFileReader.getString()
@@ -100,8 +104,9 @@ class TestExecutor(
         }
 
         while (latch.count > 0 && noError.get()) {
-            //ignore
+            println(latch.count)
         }
+        executor.shutdown()
         if (noError.get()) {
             print("Files are equal")
         } else {

@@ -1,4 +1,4 @@
-package ru.siksmfp.network.play.tcp.testing
+package ru.siksmfp.network.play.tcp.testing.file
 
 import java.nio.file.Files
 import java.nio.file.Paths
