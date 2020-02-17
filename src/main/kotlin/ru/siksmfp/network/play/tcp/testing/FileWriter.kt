@@ -8,6 +8,6 @@ class FileWriter(
     private val fileWriter = File(filename).bufferedWriter()
 
     fun writeRow(row: String) {
-        fileWriter.write(row)
+        fileWriter.write("$row\n")
     }
 }

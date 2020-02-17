@@ -17,4 +17,8 @@ class FileReader(
                 .lines()
                 .count()
     }
+
+    fun close() {
+        reader.close()
+    }
 }

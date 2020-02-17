@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.KClass
 
 class TestExecutor(
@@ -13,7 +14,7 @@ class TestExecutor(
         private val clientClass: KClass<out Any>,
         private val testFile: String
 ) {
-    private val tempFileName = "/Users/parkito/Downloads/temp${LocalDateTime.now()}.txt"
+    private val tempFileName = "${getHomeFolderPath()}/Downloads/temp${LocalDateTime.now()}.txt"
     private val fileWriter = FileWriter(tempFileName)
     private val executor = Executors.newFixedThreadPool(5, NamedThreadFactory("client"))
     private val messageInterceptor = MessageInterceptor(fileWriter)
@@ -27,6 +28,7 @@ class TestExecutor(
                 .toList()
 
         performTest(serverInstance, clients)
+        compareResult()
     }
 
     private fun performTest(server: Server<String>, clients: List<Client<String>>) {
@@ -57,31 +59,53 @@ class TestExecutor(
         }
         println("to wait")
         latch.await()
+        fileReader.close()
         executor.shutdown()
         server.stop()
         clients.forEach { it.stop() }
 
         val finish = System.nanoTime()
-        println(TimeUnit.NANOSECONDS.toSeconds(finish - start))
+        println(TimeUnit.NANOSECONDS.toMillis(finish - start))
     }
 
-    fun compareResult() {
+    private fun compareResult() {
+        val executor = Executors.newFixedThreadPool(5, NamedThreadFactory("checker"))
+        println("Start file checking")
         val testFileReader = FileReader(testFile)
-        val testFileRow = testFileReader.getString()
-        while (testFileRow != null) {
-            val tempFileReader = FileReader(tempFileName)
-            var tempFileRow = tempFileReader.getString()
-            var isTestRowFound = false
-            while (tempFileRow != null) {
-                if (testFileRow == tempFileRow) {
-                    isTestRowFound = true
-                    break
+        val linesNumber = testFileReader.getLinesNumber()
+        val latch = CountDownLatch(linesNumber.toInt())
+        val noError = AtomicBoolean(true)
+        for (i in 0..linesNumber) {
+            val testFileRow = testFileReader.getString()
+            println(testFileRow)
+            executor.execute {
+                val tempFileReader = FileReader(tempFileName)
+                var tempFileRow = tempFileReader.getString()
+                var isTestRowFound = false
+                while (tempFileRow != null) {
+                    if (testFileRow == tempFileRow) {
+                        isTestRowFound = true
+                        break
+                    }
+                    tempFileRow = tempFileReader.getString()
                 }
-                tempFileRow = tempFileReader.getString()
+                tempFileReader.close()
+                latch.countDown()
+                if (!isTestRowFound) {
+                    noError.set(true)
+                    println(testFileRow)
+                    throw IllegalStateException("Files are different")
+                }
             }
-            if (!isTestRowFound) {
-                throw IllegalStateException("Files are different")
-            }
+        }
+
+        while (latch.count > 0 && noError.get()) {
+            //ignore
+        }
+        if (noError.get()) {
+            print("Files are equal")
+        } else {
+            print("Files are different")
         }
     }
 }

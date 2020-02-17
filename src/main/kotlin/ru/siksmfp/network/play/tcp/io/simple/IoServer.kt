@@ -3,7 +3,9 @@ package ru.siksmfp.network.play.tcp.io.simple
 import ru.siksmfp.network.play.api.Handler
 import ru.siksmfp.network.play.api.Server
 import ru.siksmfp.network.play.tcp.testing.NamedThreadFactory
+import ru.siksmfp.network.play.tcp.testing.getServerServerThreads
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.ServerSocket
@@ -14,16 +16,21 @@ class IoServer(
         private val port: Int
 ) : Server<String> {
     private var handler: Handler<String>? = null
-    private val executor = Executors.newFixedThreadPool(10, NamedThreadFactory("server"))
+    private val executor = Executors.newFixedThreadPool(getServerServerThreads(), NamedThreadFactory("server"))
     private lateinit var serverSocket: ServerSocket
 
     override fun start() {
         serverSocket = ServerSocket(port)
         println("Server started on $port")
         while (true) {
-            val client = serverSocket.accept()
-            executor.execute {
-                handleClient(client)
+            try {
+                val client = serverSocket.accept()
+                executor.execute {
+                    handleClient(client)
+                }
+            } catch (ex: IOException) {
+                println("Finishing server socket")
+                break
             }
         }
     }
@@ -45,7 +52,7 @@ class IoServer(
         val bufferedReader = BufferedReader(InputStreamReader(client.getInputStream()))
         bufferedReader.use {
             while (true) {
-                val received = bufferedReader.readLine()
+                val received = bufferedReader.readLine() ?: break
                 handler?.handle(received)
                 println("IoServer: received $received")
 

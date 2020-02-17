@@ -7,6 +7,6 @@ fun main() {
     TestExecutor(
             serverClass = IoServer::class,
             clientClass = IoClient::class,
-            testFile = "/Users/parkito/Downloads/test.txt"
+            testFile = "${getHomeFolderPath()}/Downloads/test.txt"
     ).executeTest()
 }
