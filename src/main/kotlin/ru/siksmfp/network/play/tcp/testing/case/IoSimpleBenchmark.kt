@@ -12,6 +12,20 @@ class IoBenchmark {
     fun smallFileBenchmark() {
 
     }
+
+    @Benchmark
+    fun middleFileBenchmark() {
+
+    }
+    @Benchmark
+    fun bigFileBenchmark() {
+
+    }
+
+    @Benchmark
+    fun largeFileBenchmark() {
+
+    }
 }
 
 fun main() {
