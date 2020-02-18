@@ -12,31 +12,40 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 
 class TestExecutor(
-        private val serverClass: KClass<out Any>,
-        private val clientClass: KClass<out Any>,
-        private val testFile: String
+        private val property: TestProperty
 ) {
     private val tempFileName = "${getHomeFolderPath()}/Downloads/temp${LocalDateTime.now()}.txt"
     private val executor = Executors.newFixedThreadPool(5, NamedThreadFactory("client"))
     private val messageInterceptor = MessageInterceptor(tempFileName)
 
     fun executeTest() {
-        val serverClassConstructor = serverClass.constructors.toList()[0]
-        val clientClassConstructor = clientClass.constructors.toList()[0]
-        val serverInstance = serverClassConstructor.call(8081) as Server<String>
-        val clients = IntRange(0, 5)
-                .map { clientClassConstructor.call("localhost", 8081) as Client<String> }
-                .toList()
+        val server = constructServer(property)
+        val clients = constructClients(property)
+        performTest(server, clients)
+        FileComparator(property.testFile, tempFileName).compare()
+    }
 
-        performTest(serverInstance, clients)
-        FileComparator(testFile, tempFileName).compare()
+    private fun constructServer(property: TestProperty): Server<String> {
+        return getConstructor(property.serverClass).call(8081) as Server<String>
+    }
+
+    private fun constructClients(property: TestProperty): List<Client<String>> {
+        val constructor = getConstructor(property.clientClass)
+        return IntRange(0, 5)
+                .map { constructor.call("localhost", 8081) as Client<String> }
+                .toList()
+    }
+
+    private fun getConstructor(clazz: KClass<out Any>): KFunction<Any> {
+        return clazz.constructors.toList()[0]
     }
 
     private fun performTest(server: Server<String>, clients: List<Client<String>>) {
         val start = System.nanoTime()
-        val fileReader = FileReader(testFile)
+        val fileReader = FileReader(property.testFile)
         server.setHandler(messageInterceptor)
         executor.execute { server.start() }
         clients.forEach { it.start() }

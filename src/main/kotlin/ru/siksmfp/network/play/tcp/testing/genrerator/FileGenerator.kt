@@ -14,7 +14,7 @@ class FileGenerator {
         private val random: SecureRandom = SecureRandom()
         private val DATA_FOR_RANDOM_STRING = CHAR_LOWER + CHAR_UPPER + NUMBER
         private const val STRING_MAX_SIZE = 1000
-        private const val STRING_NUMBER = 100_000
+        private const val STRING_NUMBER = 1_000_000
     }
 
     fun generateFile(filename: String) {
