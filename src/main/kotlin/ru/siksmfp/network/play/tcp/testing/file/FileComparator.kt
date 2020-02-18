@@ -1,5 +1,7 @@
 package ru.siksmfp.network.play.tcp.testing.file
 
+import ru.siksmfp.network.play.tcp.testing.genrerator.FileGenerator.DATA_FOR_RANDOM_STRING
+
 class FileComparator(
         private val baseFile: String,
         private val comparableFile: String
@@ -13,7 +15,7 @@ class FileComparator(
             throw IllegalStateException("Files are different")
         }
 
-        "abcdefghijklmnopqrstuvwxyz".forEach {
+        DATA_FOR_RANDOM_STRING.forEach {
             val baseOccurrences = compareStringInclude(baseFile, it.toString())
             val comparableOccurrences = compareStringInclude(comparableFile, it.toString())
             if (baseOccurrences != comparableOccurrences) {

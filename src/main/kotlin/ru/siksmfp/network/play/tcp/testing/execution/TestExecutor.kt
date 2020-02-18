@@ -4,9 +4,9 @@ import ru.siksmfp.network.play.api.Client
 import ru.siksmfp.network.play.api.Server
 import ru.siksmfp.network.play.tcp.testing.file.FileComparator
 import ru.siksmfp.network.play.tcp.testing.file.FileReader
+import ru.siksmfp.network.play.tcp.testing.genrerator.FileGenerator
 import ru.siksmfp.network.play.tcp.testing.support.MessageInterceptor
 import ru.siksmfp.network.play.tcp.testing.support.NamedThreadFactory
-import ru.siksmfp.network.play.tcp.testing.support.getHomeFolderPath
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -17,7 +17,7 @@ import kotlin.reflect.KFunction
 class TestExecutor(
         private val property: TestProperty
 ) {
-    private val tempFileName = "${getHomeFolderPath()}/Downloads/temp${LocalDateTime.now()}.txt"
+    private val tempFileName = "/tmp/test-tmp-${LocalDateTime.now()}.txt"
     private val executor = Executors.newFixedThreadPool(property.clientTestThreads, NamedThreadFactory("client"))
 
     fun executeTest() {
@@ -45,7 +45,7 @@ class TestExecutor(
     private fun performTest(server: Server<String>, clients: List<Client<String>>) {
         val start = System.nanoTime()
 
-        prepareTest(server, clients)
+        prepareTest(server, clients, property)
         runTest(clients)
         finishTest(server, clients)
 
@@ -53,7 +53,8 @@ class TestExecutor(
         println(NANOSECONDS.toMillis(finish - start))
     }
 
-    private fun prepareTest(server: Server<String>, clients: List<Client<String>>) {
+    private fun prepareTest(server: Server<String>, clients: List<Client<String>>, property: TestProperty) {
+        FileGenerator.generateFile(property.testFile, property.testFileSize)
         val messageInterceptor = MessageInterceptor(tempFileName)
         server.setHandler(messageInterceptor)
         executor.execute { server.start() }
@@ -67,10 +68,9 @@ class TestExecutor(
             val latch = CountDownLatch(linesNumber.toInt())
             var currentClient = 0
             for (currentLine in 0 until linesNumber) {
-                val string = fileReader.nextLine()
                 val immutableClientNumber = currentClient
                 executor.execute {
-                    clients[immutableClientNumber].send(string!!)
+                    clients[immutableClientNumber].send(fileReader.nextLine()!!)
                     latch.countDown()
                 }
                 currentClient++
