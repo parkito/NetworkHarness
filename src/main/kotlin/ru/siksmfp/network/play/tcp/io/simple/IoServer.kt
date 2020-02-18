@@ -39,6 +39,7 @@ class IoServer(
         println("Stopping server")
         executor.shutdown()
         serverSocket.close()
+        handler?.close()
     }
 
     override fun setHandler(handler: Handler<String>) {

@@ -2,8 +2,8 @@ package ru.siksmfp.network.play.tcp.testing.execution
 
 import ru.siksmfp.network.play.api.Client
 import ru.siksmfp.network.play.api.Server
+import ru.siksmfp.network.play.tcp.testing.file.FileComparator
 import ru.siksmfp.network.play.tcp.testing.file.FileReader
-import ru.siksmfp.network.play.tcp.testing.file.FileWriter
 import ru.siksmfp.network.play.tcp.testing.support.MessageInterceptor
 import ru.siksmfp.network.play.tcp.testing.support.NamedThreadFactory
 import ru.siksmfp.network.play.tcp.testing.support.getHomeFolderPath
@@ -19,9 +19,8 @@ class TestExecutor(
         private val testFile: String
 ) {
     private val tempFileName = "${getHomeFolderPath()}/Downloads/temp${LocalDateTime.now()}.txt"
-    private val fileWriter = FileWriter(tempFileName)
     private val executor = Executors.newFixedThreadPool(5, NamedThreadFactory("client"))
-    private val messageInterceptor = MessageInterceptor(fileWriter)
+    private val messageInterceptor = MessageInterceptor(tempFileName)
 
     fun executeTest() {
         val serverClassConstructor = serverClass.constructors.toList()[0]
@@ -43,27 +42,27 @@ class TestExecutor(
         clients.forEach { it.start() }
 
         var currentClient = 0
-        var string = fileReader.nextLine()
-        val latch = CountDownLatch(fileReader.lineAmount().toInt())
-        while (string != null) {
-            println(string)
-            val immutableString = string
-            val immutableClientNumber = currentClient
-            executor.execute {
-                clients[immutableClientNumber].send(immutableString)
-                latch.countDown()
-            }
-            currentClient++
+        fileReader.use {
+            var string = fileReader.nextLine()
+            val latch = CountDownLatch(fileReader.lineAmount().toInt())
+            while (string != null) {
+                println(string)
+                val immutableString = string
+                val immutableClientNumber = currentClient
+                executor.execute {
+                    clients[immutableClientNumber].send(immutableString)
+                    latch.countDown()
+                }
+                currentClient++
 
-            if (currentClient == clients.size) {
-                currentClient = 0
+                if (currentClient == clients.size) {
+                    currentClient = 0
+                }
+                string = fileReader.nextLine()
+                println(string)
             }
-            string = fileReader.nextLine()
-            println(string)
+            latch.await()
         }
-        println("to wait")
-        latch.await()
-        fileReader.close()
         executor.shutdown()
         server.stop()
         clients.forEach { it.stop() }

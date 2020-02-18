@@ -1,11 +1,12 @@
 package ru.siksmfp.network.play.tcp.testing.file
 
+import java.io.Closeable
 import java.nio.file.Files
 import java.nio.file.Paths
 
 class FileReader(
         private val filename: String
-) {
+) : Closeable {
     private val reader = Files.newBufferedReader(Paths.get(filename))
 
     fun nextLine(): String? {
@@ -18,7 +19,7 @@ class FileReader(
                 .count()
     }
 
-    fun close() {
+    override fun close() {
         reader.close()
     }
 }

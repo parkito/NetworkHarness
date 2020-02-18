@@ -1,13 +1,19 @@
 package ru.siksmfp.network.play.tcp.testing.support
 
 import ru.siksmfp.network.play.api.Handler
-import ru.siksmfp.network.play.tcp.testing.file.FileWriter
+import java.io.File
 
 class MessageInterceptor(
-        private val fileWriter: FileWriter
+        private val filename: String
 ) : Handler<String> {
 
+    private val fileWriter = File(filename).bufferedWriter()
+
     override fun handle(t: String) {
-        fileWriter.writeRow(t)
+        fileWriter.write("$t\n")
+    }
+
+    override fun close() {
+        fileWriter.close()
     }
 }
