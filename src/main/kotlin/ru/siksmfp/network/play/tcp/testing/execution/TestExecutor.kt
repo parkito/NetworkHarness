@@ -10,7 +10,7 @@ import ru.siksmfp.network.play.tcp.testing.support.getHomeFolderPath
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.NANOSECONDS
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
@@ -19,7 +19,6 @@ class TestExecutor(
 ) {
     private val tempFileName = "${getHomeFolderPath()}/Downloads/temp${LocalDateTime.now()}.txt"
     private val executor = Executors.newFixedThreadPool(5, NamedThreadFactory("client"))
-    private val messageInterceptor = MessageInterceptor(tempFileName)
 
     fun executeTest() {
         val server = constructServer(property)
@@ -45,15 +44,28 @@ class TestExecutor(
 
     private fun performTest(server: Server<String>, clients: List<Client<String>>) {
         val start = System.nanoTime()
-        val fileReader = FileReader(property.testFile)
+
+        prepareTest(server, clients)
+        runTest(clients)
+        finishTest(server, clients)
+
+        val finish = System.nanoTime()
+        println(NANOSECONDS.toMillis(finish - start))
+    }
+
+    private fun prepareTest(server: Server<String>, clients: List<Client<String>>) {
+        val messageInterceptor = MessageInterceptor(tempFileName)
         server.setHandler(messageInterceptor)
         executor.execute { server.start() }
         clients.forEach { it.start() }
+    }
 
-        var currentClient = 0
+    private fun runTest(clients: List<Client<String>>) {
+        val fileReader = FileReader(property.testFile)
         fileReader.use {
             var string = fileReader.nextLine()
             val latch = CountDownLatch(fileReader.lineAmount().toInt())
+            var currentClient = 0
             while (string != null) {
                 println(string)
                 val immutableString = string
@@ -72,11 +84,11 @@ class TestExecutor(
             }
             latch.await()
         }
+    }
+
+    private fun finishTest(server: Server<String>, clients: List<Client<String>>) {
         executor.shutdown()
         server.stop()
         clients.forEach { it.stop() }
-
-        val finish = System.nanoTime()
-        println(TimeUnit.NANOSECONDS.toMillis(finish - start))
     }
 }
