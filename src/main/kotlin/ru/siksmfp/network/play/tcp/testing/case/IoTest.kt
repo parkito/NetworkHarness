@@ -10,7 +10,9 @@ fun main() {
     val property = TestProperty(
             serverClass = IoServer::class,
             clientClass = IoClient::class,
-            testFile = "${getHomeFolderPath()}/Downloads/test.txt"
+            testFile = "${getHomeFolderPath()}/Downloads/test.txt",
+            clientTestThreads = 5,
+            serverThreads = 7
     )
     TestExecutor(property).executeTest()
 }

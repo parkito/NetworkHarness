@@ -18,7 +18,7 @@ class TestExecutor(
         private val property: TestProperty
 ) {
     private val tempFileName = "${getHomeFolderPath()}/Downloads/temp${LocalDateTime.now()}.txt"
-    private val executor = Executors.newFixedThreadPool(5, NamedThreadFactory("client"))
+    private val executor = Executors.newFixedThreadPool(property.clientTestThreads, NamedThreadFactory("client"))
 
     fun executeTest() {
         val server = constructServer(property)
@@ -28,7 +28,7 @@ class TestExecutor(
     }
 
     private fun constructServer(property: TestProperty): Server<String> {
-        return getConstructor(property.serverClass).call(8081) as Server<String>
+        return getConstructor(property.serverClass).call(8081, property.serverThreads) as Server<String>
     }
 
     private fun constructClients(property: TestProperty): List<Client<String>> {
@@ -63,15 +63,14 @@ class TestExecutor(
     private fun runTest(clients: List<Client<String>>) {
         val fileReader = FileReader(property.testFile)
         fileReader.use {
-            var string = fileReader.nextLine()
-            val latch = CountDownLatch(fileReader.lineAmount().toInt())
+            val linesNumber = fileReader.lineAmount()
+            val latch = CountDownLatch(linesNumber.toInt())
             var currentClient = 0
-            while (string != null) {
-                println(string)
-                val immutableString = string
+            for (currentLine in 0 until linesNumber) {
+                val string = fileReader.nextLine()
                 val immutableClientNumber = currentClient
                 executor.execute {
-                    clients[immutableClientNumber].send(immutableString)
+                    clients[immutableClientNumber].send(string!!)
                     latch.countDown()
                 }
                 currentClient++
@@ -79,8 +78,6 @@ class TestExecutor(
                 if (currentClient == clients.size) {
                     currentClient = 0
                 }
-                string = fileReader.nextLine()
-                println(string)
             }
             latch.await()
         }
