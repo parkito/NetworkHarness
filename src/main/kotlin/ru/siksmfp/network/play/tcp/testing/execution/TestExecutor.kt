@@ -20,11 +20,12 @@ class TestExecutor(
     private val tempFileName = "/tmp/test-tmp-${LocalDateTime.now()}.txt"
     private val executor = Executors.newFixedThreadPool(property.clientTestThreads, NamedThreadFactory("client"))
 
-    fun executeTest() {
+    fun executeTest(): Boolean {
         val server = constructServer(property)
         val clients = constructClients(property)
         performTest(server, clients)
         FileComparator(property.testFile, tempFileName).compare()
+        return true
     }
 
     private fun constructServer(property: TestProperty): Server<String> {

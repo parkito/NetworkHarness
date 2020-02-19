@@ -6,7 +6,7 @@ import ru.siksmfp.network.play.tcp.io.simple.IoServer
 import ru.siksmfp.network.play.tcp.testing.execution.TestExecutor
 import ru.siksmfp.network.play.tcp.testing.execution.TestProperty
 
-class IoBenchmark {
+class IoBenchmark : AbstractBenchmark() {
 
     @Benchmark
     fun smallFileBenchmark() {
@@ -17,6 +17,7 @@ class IoBenchmark {
     fun middleFileBenchmark() {
 
     }
+
     @Benchmark
     fun bigFileBenchmark() {
 
@@ -29,12 +30,6 @@ class IoBenchmark {
 }
 
 fun main() {
-    val property = TestProperty(
-            serverClass = IoServer::class,
-            clientClass = IoClient::class,
-            clientTestThreads = 5,
-            serverThreads = 7,
-            testFileSize = 1_000_000
-    )
-    TestExecutor(property).executeTest()
+
+//    TestExecutor(property).executeTest()
 }

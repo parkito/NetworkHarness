@@ -12,7 +12,7 @@ import java.net.Socket
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class IoServer(
+class IoServer<T>(
         private val port: Int,
         private val threadNumber: Int?
 ) : Server<String> {
@@ -73,5 +73,5 @@ class IoServer(
 }
 
 fun main() {
-    IoServer(8081, 5).start()
+    IoServer<Any>(8081, 5).start()
 }
