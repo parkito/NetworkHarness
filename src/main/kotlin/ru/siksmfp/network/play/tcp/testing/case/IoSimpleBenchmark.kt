@@ -1,35 +1,32 @@
 package ru.siksmfp.network.play.tcp.testing.case
 
 import org.openjdk.jmh.annotations.Benchmark
-import ru.siksmfp.network.play.tcp.io.simple.IoClient
-import ru.siksmfp.network.play.tcp.io.simple.IoServer
 import ru.siksmfp.network.play.tcp.testing.execution.TestExecutor
-import ru.siksmfp.network.play.tcp.testing.execution.TestProperty
+import ru.siksmfp.network.play.tcp.testing.state.IoSimpleFewThreadsState
 
-class IoBenchmark : AbstractBenchmark() {
+class IoSimpleFewThreadBenchmark : AbstractBenchmark() {
 
     @Benchmark
-    fun smallFileBenchmark() {
-
+    fun smallFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+        return TestExecutor(state.getPropertyForSmall())
+                .executeTest()
     }
 
     @Benchmark
-    fun middleFileBenchmark() {
-
+    fun middleFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+        return TestExecutor(state.getPropertyForMiddle())
+                .executeTest()
     }
 
     @Benchmark
-    fun bigFileBenchmark() {
-
+    fun bigFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+        return TestExecutor(state.getPropertyForBig())
+                .executeTest()
     }
 
     @Benchmark
-    fun largeFileBenchmark() {
-
+    fun largeFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+        return TestExecutor(state.getPropertyForLarge())
+                .executeTest()
     }
-}
-
-fun main() {
-
-//    TestExecutor(property).executeTest()
 }
