@@ -1,10 +1,10 @@
-package ru.siksmfp.network.play.tcp.testing.case
+package ru.siksmfp.network.play.tcp.testing.benchmark
 
 import org.openjdk.jmh.annotations.Benchmark
 import ru.siksmfp.network.play.tcp.testing.execution.TestExecutor
 import ru.siksmfp.network.play.tcp.testing.state.IoSimpleFewThreadsState
 
-class IoSimpleFewThreadBenchmark : AbstractBenchmark() {
+open class IoSimpleFewThreadBenchmark : AbstractBenchmark() {
 
     @Benchmark
     fun smallFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
