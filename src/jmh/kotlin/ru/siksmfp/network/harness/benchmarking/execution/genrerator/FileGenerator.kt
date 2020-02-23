@@ -29,7 +29,7 @@ object FileGenerator {
                 fileWriter.write(row)
             }
 
-            print("File was populated")
+            println("File was populated")
         }
     }
 

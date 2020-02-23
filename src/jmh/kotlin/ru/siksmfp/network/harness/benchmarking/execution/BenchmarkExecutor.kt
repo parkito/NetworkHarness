@@ -2,12 +2,13 @@ package ru.siksmfp.network.harness.benchmarking.execution
 
 import ru.siksmfp.network.harness.api.Client
 import ru.siksmfp.network.harness.api.Server
-import ru.siksmfp.network.harness.benchmarking.execution.model.BenchmarkProperty
 import ru.siksmfp.network.harness.benchmarking.execution.file.FileComparator
 import ru.siksmfp.network.harness.benchmarking.execution.file.FileReader
 import ru.siksmfp.network.harness.benchmarking.execution.genrerator.FileGenerator
+import ru.siksmfp.network.harness.benchmarking.execution.model.BenchmarkProperty
 import ru.siksmfp.network.harness.benchmarking.execution.support.MessageInterceptor
 import ru.siksmfp.network.harness.benchmarking.execution.support.NamedThreadFactory
+import java.net.Socket
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -60,7 +61,19 @@ class BenchmarkExecutor(
         val messageInterceptor = MessageInterceptor(tempFileName)
         server.setHandler(messageInterceptor)
         executor.execute { server.start() }
+        waitServerStart()
         clients.forEach { it.start() }
+    }
+
+    private fun waitServerStart() {
+        var isServerStarted = false
+        while (!isServerStarted) {
+            try {
+                Socket("localhost", 8081).use {}
+                isServerStarted = true
+            } catch (ignore: Exception) {
+            }
+        }
     }
 
     private fun runTest(clients: List<Client<String>>) {
