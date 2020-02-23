@@ -1,1 +1,1 @@
-# Repository with java network examples
+# Repository benchmarking different java/kotlin network patterns
