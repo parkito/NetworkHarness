@@ -1,6 +1,6 @@
-package ru.siksmfp.network.play.benchmarking.execution.file
+package ru.siksmfp.network.harness.benchmarking.execution.file
 
-import ru.siksmfp.network.play.benchmarking.execution.genrerator.FileGenerator.DATA_FOR_RANDOM_STRING
+import ru.siksmfp.network.harness.benchmarking.execution.genrerator.FileGenerator.DATA_FOR_RANDOM_STRING
 
 class FileComparator(
         private val baseFile: String,

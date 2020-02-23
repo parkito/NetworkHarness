@@ -1,13 +1,12 @@
 import org.gradle.api.JavaVersion.VERSION_11
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "ru.siksmfp.network.play"
+group = "ru.siksmfp.network.harness"
 version = "0.1.1"
 
-val appArchiveName = "rx-$version"
+val appArchiveName = "harness-$version"
 
 plugins {
-//    application
     kotlin("jvm") version "1.3.61"
     java
     id("me.champeau.gradle.jmh") version "0.5.0"
@@ -16,6 +15,10 @@ plugins {
 java {
     sourceCompatibility = VERSION_11
     targetCompatibility = VERSION_11
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "11"
 }
 
 dependencies {
@@ -31,24 +34,4 @@ dependencies {
 repositories {
     jcenter()
     mavenCentral()
-}
-//tasks {
-//    register("jmh", type = JavaExec::class) {
-//        dependsOn("jmhClasses")
-//        group = "benchmark"
-//        main = "org.openjdk.jmh.Main"
-//        classpath = sourceSets["jmh"].runtimeClasspath
-//         To pass parameters ("-h" gives a list of possible parameters)
-//         args(listOf("-h"))
-//    }
-//}
-
-val jar by tasks.getting(Jar::class) {
-    manifest {
-        attributes["Main-Class"] = "ru.siksmfp.network.play.Main"
-    }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
 }

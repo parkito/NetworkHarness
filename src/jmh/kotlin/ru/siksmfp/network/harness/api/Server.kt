@@ -1,4 +1,4 @@
-package ru.siksmfp.network.play.api
+package ru.siksmfp.network.harness.api
 
 interface Server<T> {
 

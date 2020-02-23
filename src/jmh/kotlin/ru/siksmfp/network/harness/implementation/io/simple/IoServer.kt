@@ -1,8 +1,8 @@
-package ru.siksmfp.network.play.tcp.io.simple
+package ru.siksmfp.network.harness.implementation.io.simple
 
-import ru.siksmfp.network.play.api.Handler
-import ru.siksmfp.network.play.api.Server
-import ru.siksmfp.network.play.benchmarking.execution.support.NamedThreadFactory
+import ru.siksmfp.network.harness.api.Handler
+import ru.siksmfp.network.harness.api.Server
+import ru.siksmfp.network.harness.benchmarking.execution.support.NamedThreadFactory
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader

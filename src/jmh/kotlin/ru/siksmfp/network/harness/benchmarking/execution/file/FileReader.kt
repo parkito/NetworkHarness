@@ -1,4 +1,4 @@
-package ru.siksmfp.network.play.benchmarking.execution.file
+package ru.siksmfp.network.harness.benchmarking.execution.file
 
 import java.io.Closeable
 import java.nio.file.Files

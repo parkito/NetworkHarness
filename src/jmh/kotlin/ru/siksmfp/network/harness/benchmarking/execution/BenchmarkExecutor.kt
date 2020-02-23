@@ -1,13 +1,13 @@
-package ru.siksmfp.network.play.benchmarking.execution
+package ru.siksmfp.network.harness.benchmarking.execution
 
-import ru.siksmfp.network.play.api.Client
-import ru.siksmfp.network.play.api.Server
-import ru.siksmfp.network.play.benchmarking.execution.model.BenchmarkProperty
-import ru.siksmfp.network.play.benchmarking.execution.file.FileComparator
-import ru.siksmfp.network.play.benchmarking.execution.file.FileReader
-import ru.siksmfp.network.play.benchmarking.execution.genrerator.FileGenerator
-import ru.siksmfp.network.play.benchmarking.execution.support.MessageInterceptor
-import ru.siksmfp.network.play.benchmarking.execution.support.NamedThreadFactory
+import ru.siksmfp.network.harness.api.Client
+import ru.siksmfp.network.harness.api.Server
+import ru.siksmfp.network.harness.benchmarking.execution.model.BenchmarkProperty
+import ru.siksmfp.network.harness.benchmarking.execution.file.FileComparator
+import ru.siksmfp.network.harness.benchmarking.execution.file.FileReader
+import ru.siksmfp.network.harness.benchmarking.execution.genrerator.FileGenerator
+import ru.siksmfp.network.harness.benchmarking.execution.support.MessageInterceptor
+import ru.siksmfp.network.harness.benchmarking.execution.support.NamedThreadFactory
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors

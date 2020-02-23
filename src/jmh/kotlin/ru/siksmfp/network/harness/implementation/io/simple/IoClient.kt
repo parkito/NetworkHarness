@@ -1,6 +1,6 @@
-package ru.siksmfp.network.play.tcp.io.simple
+package ru.siksmfp.network.harness.implementation.io.simple
 
-import ru.siksmfp.network.play.api.Client
+import ru.siksmfp.network.harness.api.Client
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter

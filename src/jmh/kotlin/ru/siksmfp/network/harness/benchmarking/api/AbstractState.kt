@@ -1,8 +1,8 @@
-package ru.siksmfp.network.play.benchmarking.api
+package ru.siksmfp.network.harness.benchmarking.api
 
-import ru.siksmfp.network.play.api.Client
-import ru.siksmfp.network.play.api.Server
-import ru.siksmfp.network.play.benchmarking.execution.model.BenchmarkProperty
+import ru.siksmfp.network.harness.api.Client
+import ru.siksmfp.network.harness.api.Server
+import ru.siksmfp.network.harness.benchmarking.execution.model.BenchmarkProperty
 import kotlin.reflect.KClass
 
 abstract class AbstractState(

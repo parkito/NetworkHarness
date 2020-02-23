@@ -1,10 +1,10 @@
-package ru.siksmfp.network.play.benchmarking.execution.state
+package ru.siksmfp.network.harness.benchmarking.execution.state
 
 import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.State
-import ru.siksmfp.network.play.benchmarking.api.AbstractState
-import ru.siksmfp.network.play.tcp.io.simple.IoClient
-import ru.siksmfp.network.play.tcp.io.simple.IoServer
+import ru.siksmfp.network.harness.benchmarking.api.AbstractState
+import ru.siksmfp.network.harness.implementation.io.simple.IoClient
+import ru.siksmfp.network.harness.implementation.io.simple.IoServer
 
 @State(Scope.Benchmark)
 open class IoSimpleFewThreadsState : AbstractState(

@@ -1,6 +1,6 @@
-package ru.siksmfp.network.play.benchmarking.execution.support
+package ru.siksmfp.network.harness.benchmarking.execution.support
 
-import ru.siksmfp.network.play.api.Handler
+import ru.siksmfp.network.harness.api.Handler
 import java.io.File
 
 class MessageInterceptor(

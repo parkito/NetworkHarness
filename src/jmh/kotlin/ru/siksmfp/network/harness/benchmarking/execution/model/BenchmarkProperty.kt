@@ -1,7 +1,7 @@
-package ru.siksmfp.network.play.benchmarking.execution.model
+package ru.siksmfp.network.harness.benchmarking.execution.model
 
-import ru.siksmfp.network.play.api.Client
-import ru.siksmfp.network.play.api.Server
+import ru.siksmfp.network.harness.api.Client
+import ru.siksmfp.network.harness.api.Server
 import java.time.LocalDateTime
 import kotlin.reflect.KClass
 

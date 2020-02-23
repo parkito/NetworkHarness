@@ -1,4 +1,4 @@
-package ru.siksmfp.network.play.benchmarking.execution.genrerator
+package ru.siksmfp.network.harness.benchmarking.execution.genrerator
 
 import java.io.File
 import java.nio.file.Files
