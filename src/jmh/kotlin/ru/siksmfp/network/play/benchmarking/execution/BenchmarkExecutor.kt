@@ -1,12 +1,13 @@
-package ru.siksmfp.network.play.tcp.testing.execution
+package ru.siksmfp.network.play.benchmarking.execution
 
 import ru.siksmfp.network.play.api.Client
 import ru.siksmfp.network.play.api.Server
-import ru.siksmfp.network.play.tcp.testing.file.FileComparator
-import ru.siksmfp.network.play.tcp.testing.file.FileReader
-import ru.siksmfp.network.play.tcp.testing.genrerator.FileGenerator
-import ru.siksmfp.network.play.tcp.testing.support.MessageInterceptor
-import ru.siksmfp.network.play.tcp.testing.support.NamedThreadFactory
+import ru.siksmfp.network.play.benchmarking.execution.model.BenchmarkProperty
+import ru.siksmfp.network.play.benchmarking.execution.file.FileComparator
+import ru.siksmfp.network.play.benchmarking.execution.file.FileReader
+import ru.siksmfp.network.play.benchmarking.execution.genrerator.FileGenerator
+import ru.siksmfp.network.play.benchmarking.execution.support.MessageInterceptor
+import ru.siksmfp.network.play.benchmarking.execution.support.NamedThreadFactory
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -14,8 +15,8 @@ import java.util.concurrent.TimeUnit.NANOSECONDS
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
-class TestExecutor(
-        private val property: TestProperty
+class BenchmarkExecutor(
+        private val property: BenchmarkProperty
 ) {
     private val tempFileName = "/tmp/test-tmp-${LocalDateTime.now()}.txt"
     private val executor = Executors.newFixedThreadPool(property.clientTestThreads, NamedThreadFactory("client"))
@@ -28,11 +29,11 @@ class TestExecutor(
         return true
     }
 
-    private fun constructServer(property: TestProperty): Server<String> {
+    private fun constructServer(property: BenchmarkProperty): Server<String> {
         return getConstructor(property.serverClass).call(8081, property.serverThreads) as Server<String>
     }
 
-    private fun constructClients(property: TestProperty): List<Client<String>> {
+    private fun constructClients(property: BenchmarkProperty): List<Client<String>> {
         val constructor = getConstructor(property.clientClass)
         return IntRange(0, 5)
                 .map { constructor.call("localhost", 8081) as Client<String> }
@@ -54,7 +55,7 @@ class TestExecutor(
         println(NANOSECONDS.toMillis(finish - start))
     }
 
-    private fun prepareTest(server: Server<String>, clients: List<Client<String>>, property: TestProperty) {
+    private fun prepareTest(server: Server<String>, clients: List<Client<String>>, property: BenchmarkProperty) {
         FileGenerator.generateFile(property.testFile, property.testFileSize)
         val messageInterceptor = MessageInterceptor(tempFileName)
         server.setHandler(messageInterceptor)

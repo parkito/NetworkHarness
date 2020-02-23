@@ -1,4 +1,4 @@
-package ru.siksmfp.network.play.tcp.testing.genrerator
+package ru.siksmfp.network.play.benchmarking.execution.genrerator
 
 import java.io.File
 import java.nio.file.Files

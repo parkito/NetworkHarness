@@ -1,11 +1,11 @@
-package ru.siksmfp.network.play.tcp.testing.execution
+package ru.siksmfp.network.play.benchmarking.execution.model
 
 import ru.siksmfp.network.play.api.Client
 import ru.siksmfp.network.play.api.Server
 import java.time.LocalDateTime
 import kotlin.reflect.KClass
 
-class TestProperty(
+class BenchmarkProperty(
         val serverClass: KClass<out Server<*>>,
         val clientClass: KClass<out Client<*>>,
         val clientTestThreads: Int,

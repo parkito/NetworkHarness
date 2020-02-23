@@ -1,4 +1,4 @@
-package ru.siksmfp.network.play.tcp.testing.support
+package ru.siksmfp.network.play.benchmarking.execution.support
 
 import java.util.concurrent.ThreadFactory
 

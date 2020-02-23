@@ -1,4 +1,4 @@
-package ru.siksmfp.network.play.tcp.testing.file
+package ru.siksmfp.network.play.benchmarking.execution.file
 
 import java.io.Closeable
 import java.nio.file.Files

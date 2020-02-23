@@ -2,7 +2,7 @@ package ru.siksmfp.network.play.tcp.io.simple
 
 import ru.siksmfp.network.play.api.Handler
 import ru.siksmfp.network.play.api.Server
-import ru.siksmfp.network.play.tcp.testing.support.NamedThreadFactory
+import ru.siksmfp.network.play.benchmarking.execution.support.NamedThreadFactory
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader

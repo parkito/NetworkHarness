@@ -1,4 +1,4 @@
-package ru.siksmfp.network.play.tcp.testing.benchmark
+package ru.siksmfp.network.play.benchmarking.api
 
 import org.openjdk.jmh.annotations.BenchmarkMode
 import org.openjdk.jmh.annotations.Fork

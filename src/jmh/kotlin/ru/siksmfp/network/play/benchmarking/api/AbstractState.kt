@@ -1,8 +1,8 @@
-package ru.siksmfp.network.play.tcp.testing.state
+package ru.siksmfp.network.play.benchmarking.api
 
 import ru.siksmfp.network.play.api.Client
 import ru.siksmfp.network.play.api.Server
-import ru.siksmfp.network.play.tcp.testing.execution.TestProperty
+import ru.siksmfp.network.play.benchmarking.execution.model.BenchmarkProperty
 import kotlin.reflect.KClass
 
 abstract class AbstractState(
@@ -12,8 +12,8 @@ abstract class AbstractState(
         private val serverThreads: Int
 ) {
 
-    fun getPropertyForSmall(): TestProperty {
-        return TestProperty(
+    fun getPropertyForSmall(): BenchmarkProperty {
+        return BenchmarkProperty(
                 serverClass,
                 clientClass,
                 clientTestThreads,
@@ -22,8 +22,8 @@ abstract class AbstractState(
         )
     }
 
-    fun getPropertyForMiddle(): TestProperty {
-        return TestProperty(
+    fun getPropertyForMiddle(): BenchmarkProperty {
+        return BenchmarkProperty(
                 serverClass,
                 clientClass,
                 clientTestThreads,
@@ -32,8 +32,8 @@ abstract class AbstractState(
         )
     }
 
-    fun getPropertyForBig(): TestProperty {
-        return TestProperty(
+    fun getPropertyForBig(): BenchmarkProperty {
+        return BenchmarkProperty(
                 serverClass,
                 clientClass,
                 clientTestThreads,
@@ -42,8 +42,8 @@ abstract class AbstractState(
         )
     }
 
-    fun getPropertyForLarge(): TestProperty {
-        return TestProperty(
+    fun getPropertyForLarge(): BenchmarkProperty {
+        return BenchmarkProperty(
                 serverClass,
                 clientClass,
                 clientTestThreads,

@@ -1,10 +1,10 @@
-package ru.siksmfp.network.play.tcp.testing.support
+package ru.siksmfp.network.play.benchmarking.execution.support
 
 import ru.siksmfp.network.play.api.Handler
 import java.io.File
 
 class MessageInterceptor(
-        private val filename: String
+        filename: String
 ) : Handler<String> {
 
     private val fileWriter = File(filename).bufferedWriter()

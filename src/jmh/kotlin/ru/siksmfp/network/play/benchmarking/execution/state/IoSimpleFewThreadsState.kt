@@ -1,7 +1,8 @@
-package ru.siksmfp.network.play.tcp.testing.state
+package ru.siksmfp.network.play.benchmarking.execution.state
 
 import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.State
+import ru.siksmfp.network.play.benchmarking.api.AbstractState
 import ru.siksmfp.network.play.tcp.io.simple.IoClient
 import ru.siksmfp.network.play.tcp.io.simple.IoServer
 
