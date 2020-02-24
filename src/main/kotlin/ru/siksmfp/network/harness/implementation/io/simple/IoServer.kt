@@ -35,6 +35,7 @@ class IoServer<T>(
                     handleClient(client)
                 }
             } catch (ex: IOException) {
+                println(ex.message)
                 println("Finishing server socket")
                 break
             }

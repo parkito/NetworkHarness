@@ -12,22 +12,4 @@ open class IoSimpleFewThreadBenchmark : AbstractBenchmark() {
         return BenchmarkExecutor(state.getPropertyForSmall())
                 .executeTest()
     }
-
-    @Benchmark
-    fun middleFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
-        return BenchmarkExecutor(state.getPropertyForMiddle())
-                .executeTest()
-    }
-
-    @Benchmark
-    fun bigFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
-        return BenchmarkExecutor(state.getPropertyForBig())
-                .executeTest()
-    }
-
-    @Benchmark
-    fun largeFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
-        return BenchmarkExecutor(state.getPropertyForLarge())
-                .executeTest()
-    }
 }
