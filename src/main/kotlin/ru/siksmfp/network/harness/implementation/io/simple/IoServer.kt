@@ -13,8 +13,7 @@ import java.util.concurrent.ExecutorService
 
 class IoServer(
         private val port: Int,
-        threadNumber: Int
-        ?
+        threadNumber: Int?
 ) : Server<String> {
     private val executor: ExecutorService = createExecutor(threadNumber)
     private var handler: Handler<String>? = null
