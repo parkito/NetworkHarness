@@ -8,8 +8,14 @@ class FileComparator(
 ) {
 
     fun compare() {
-        val comparableLines = FileReader(comparableFile).lineAmount()
-        val baselineLines = FileReader(baseFile).lineAmount()
+        val baselineFileReader = FileReader(comparableFile)
+        val comparableLines = baselineFileReader.lineAmount()
+        val comparableFileReader = FileReader(baseFile)
+        val baselineLines = comparableFileReader.lineAmount()
+
+        baselineFileReader.close()
+        comparableFileReader.close()
+
         if (baselineLines != comparableLines) {
             println("Base lines length $baselineLines VS Comparable lines length  $comparableLines")
             throw IllegalStateException("Files are different")

@@ -16,17 +16,15 @@ object FileGenerator {
     val DATA_FOR_RANDOM_STRING = CHAR_LOWER + CHAR_UPPER + NUMBER
 
     fun generateFile(filename: String, linesNumber: Int) {
-        Files.deleteIfExists(Paths.get(filename))
         val testFile = File(filename)
         if (!testFile.createNewFile()) {
             throw IllegalStateException("Can't create a file with tests")
         }
 
-        val fileWriter = testFile.bufferedWriter()
-        fileWriter.use {
+        testFile.bufferedWriter().use {
             for (i in 0 until linesNumber) {
                 val row = "$i.) ${generateRandomString()}\n"
-                fileWriter.write(row)
+                it.write(row)
             }
 
             println("File was populated")

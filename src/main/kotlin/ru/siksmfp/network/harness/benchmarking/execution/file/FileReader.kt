@@ -14,9 +14,9 @@ class FileReader(
     }
 
     fun lineAmount(): Long {
-        return Files.newBufferedReader(Paths.get(filename))
-                .lines()
-                .count()
+        return Files.newBufferedReader(Paths.get(filename)).use {
+            it.lines().count()
+        }
     }
 
     override fun close() {
