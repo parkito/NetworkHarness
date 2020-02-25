@@ -2,7 +2,7 @@ package ru.siksmfp.network.harness.implementation.io.simple
 
 import ru.siksmfp.network.harness.api.Handler
 import ru.siksmfp.network.harness.api.Server
-import ru.siksmfp.network.harness.benchmarking.execution.support.NamedThreadFactory
+import ru.siksmfp.network.harness.benchmarking.execution.support.createExecutor
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -10,18 +10,13 @@ import java.io.PrintWriter
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
-class IoServer<T>(
+class IoServer(
         private val port: Int,
-        private val threadNumber: Int?
+        threadNumber: Int
+        ?
 ) : Server<String> {
-    private val executor: ExecutorService = if (threadNumber != null) {
-        Executors.newFixedThreadPool(threadNumber, NamedThreadFactory("server"))
-    } else {
-        Executors.newCachedThreadPool()
-    }
-
+    private val executor: ExecutorService = createExecutor(threadNumber)
     private var handler: Handler<String>? = null
     private lateinit var serverSocket: ServerSocket
 
@@ -74,5 +69,5 @@ class IoServer<T>(
 }
 
 fun main() {
-    IoServer<Any>(8081, 5).start()
+    IoServer(8081, 5).start()
 }

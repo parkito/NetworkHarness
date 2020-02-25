@@ -1,8 +1,6 @@
 package ru.siksmfp.network.harness.benchmarking.execution.genrerator
 
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.security.SecureRandom
 
 object FileGenerator {
