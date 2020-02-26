@@ -44,6 +44,7 @@ class IoClient(
         printWriter.println("test")
         printWriter.flush()
         val response = bufferedReader.readLine()
+        print(response)
         if (response == "OK") {
             println("Test passed")
         } else {
