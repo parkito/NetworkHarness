@@ -14,9 +14,7 @@ class WriteHandler(
         val sc = selectionKey.channel() as SocketChannel
         val queue = pendingData[sc] ?: ArrayDeque()
         while (!queue.isEmpty()) {
-            val bb = queue.peek()
-            bb.flip()
-            val written = sc.write(bb)
+            val written = sc.write(ByteBuffer.wrap("OK".toByteArray()))
             println("writing $written")
             if (written == -1) {
                 sc.close()
@@ -24,9 +22,9 @@ class WriteHandler(
                 println("Disconnected from in write $sc")
                 return
             }
-            if (bb.hasRemaining()) {
-                return
-            }
+//            if (bb.hasRemaining()) {
+//                return
+//            }
             queue.remove()
         }
         selectionKey.interestOps(OP_READ)
