@@ -4,6 +4,6 @@ Documentation in progress
 
 ## Implemented 
 
-###Thread pool IO benchmark
+### Thread pool IO benchmark
 
-###Thread pool NIO benchmark
+### Thread pool NIO benchmark
