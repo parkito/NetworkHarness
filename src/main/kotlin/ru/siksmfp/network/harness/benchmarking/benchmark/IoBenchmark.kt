@@ -3,30 +3,30 @@ package ru.siksmfp.network.harness.benchmarking.benchmark
 import org.openjdk.jmh.annotations.Benchmark
 import ru.siksmfp.network.harness.benchmarking.api.AbstractBenchmark
 import ru.siksmfp.network.harness.benchmarking.execution.BenchmarkExecutor
-import ru.siksmfp.network.harness.benchmarking.execution.state.IoSimpleFewThreadsState
+import ru.siksmfp.network.harness.benchmarking.execution.state.IoState
 
 open class IoBenchmark : AbstractBenchmark() {
 
     @Benchmark
-    fun ioSmallFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+    fun ioSmallFileBenchmark(state: IoState): Boolean {
         return BenchmarkExecutor(state.getPropertyForSmall())
                 .executeTest()
     }
 
     @Benchmark
-    fun ioMiddleFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+    fun ioMiddleFileBenchmark(state: IoState): Boolean {
         return BenchmarkExecutor(state.getPropertyForMiddle())
                 .executeTest()
     }
 
     @Benchmark
-    fun ioBigFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+    fun ioBigFileBenchmark(state: IoState): Boolean {
         return BenchmarkExecutor(state.getPropertyForBig())
                 .executeTest()
     }
 
     @Benchmark
-    fun ioLargeFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+    fun ioLargeFileBenchmark(state: IoState): Boolean {
         return BenchmarkExecutor(state.getPropertyForLarge())
                 .executeTest()
     }

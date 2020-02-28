@@ -23,8 +23,10 @@ class NioClient(
         client!!.write(ByteBuffer.wrap(message.toByteArray()))
         val bb = ByteBuffer.allocate(2)
         val read = client!!.read(bb)
-        val response = byteBufferToString(bb, read)
-        println("Client received a response $response")
+        if (read > 0) {
+            val response = byteBufferToString(bb, read)
+            println("Client received a response $response")
+        }
     }
 
     fun test() {

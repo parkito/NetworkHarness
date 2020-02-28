@@ -23,16 +23,16 @@ class ReadHandler(
         val sc = selectionKey.channel() as SocketChannel
         val bb = ByteBuffer.allocateDirect(80)
         val read = sc.read(bb)
-        val response = byteBufferToString(bb, read)
-        handler?.handle(response)
-        println("NioServer: received $response")
-
         if (read == -1) {
             clients.remove(sc)
             sc.close()
             println("Disconnected from in read $sc")
             return
         }
+        val response = byteBufferToString(bb, read)
+        handler?.handle(response)
+        println("NioServer: received $response")
+
         if (read > 0) {
             executorService.submit {
                 selectorActions.add(Runnable {

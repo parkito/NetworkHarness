@@ -16,7 +16,8 @@ import java.util.concurrent.ConcurrentLinkedDeque
 
 
 class NioServer(
-        private val port: Int
+        private val port: Int,
+        threadNumber: Int?
 ) : Server<String> {
 
     private var serverChannel: ServerSocketChannel? = null
@@ -82,5 +83,5 @@ class NioServer(
 }
 
 fun main() {
-    NioServer(8081).start()
+    NioServer(8081, null).start()
 }

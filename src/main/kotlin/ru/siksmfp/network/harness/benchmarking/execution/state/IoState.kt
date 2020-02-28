@@ -7,7 +7,7 @@ import ru.siksmfp.network.harness.implementation.io.simple.IoClient
 import ru.siksmfp.network.harness.implementation.io.simple.IoServer
 
 @State(Scope.Benchmark)
-open class IoSimpleFewThreadsState : AbstractState(
+open class IoState : AbstractState(
         serverClass = IoServer::class,
         clientClass = IoClient::class,
         clientTestThreads = 5,
