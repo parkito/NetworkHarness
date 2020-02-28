@@ -6,7 +6,6 @@ import java.nio.ByteBuffer
 import java.nio.channels.SocketChannel
 import java.util.*
 
-
 class NioClient(
         private val host: String,
         private val port: Int

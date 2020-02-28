@@ -6,15 +6,19 @@ import java.nio.channels.ServerSocketChannel
 import java.nio.channels.SocketChannel
 
 class AcceptHandler(
-        private val pendingData: MutableSet<SocketChannel>
+        private val clients: MutableSet<SocketChannel>
 ) : SelectionHandler {
 
     override fun handle(selectionKey: SelectionKey) {
         val ssc = selectionKey.channel() as ServerSocketChannel
-        val ss = ssc.accept()
-        println("Client connected $ss")
-        pendingData.add(ss)
-        ss.configureBlocking(false)
-        ss.register(selectionKey.selector(), OP_READ)
+        val serverChannel = ssc.accept()
+        println("Client connected $serverChannel")
+        clients.add(serverChannel)
+        serverChannel.configureBlocking(false)
+        serverChannel.register(selectionKey.selector(), OP_READ)
+    }
+
+    override fun close() {
+        //no shared state
     }
 }

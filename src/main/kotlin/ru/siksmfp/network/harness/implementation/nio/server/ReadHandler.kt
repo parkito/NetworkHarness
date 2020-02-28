@@ -1,5 +1,6 @@
 package ru.siksmfp.network.harness.implementation.nio.server
 
+import ru.siksmfp.network.harness.api.Handler
 import ru.siksmfp.network.harness.implementation.nio.byteBufferToString
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
@@ -10,9 +11,11 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class ReadHandler(
-        private val pendingData: MutableSet<SocketChannel>,
-        private val selectorAction: Queue<Runnable>
+        private val clients: MutableSet<SocketChannel>,
+        private val selectorActions: Queue<Runnable>
 ) : SelectionHandler {
+
+    private var handler: Handler<String>? = null
 
     private var executorService: ExecutorService = Executors.newFixedThreadPool(3)
 
@@ -21,20 +24,30 @@ class ReadHandler(
         val bb = ByteBuffer.allocateDirect(80)
         val read = sc.read(bb)
         val response = byteBufferToString(bb, read)
+        handler?.handle(response)
         println("NioServer: received $response")
+
         if (read == -1) {
-            pendingData.remove(sc)
+            clients.remove(sc)
             sc.close()
             println("Disconnected from in read $sc")
             return
         }
         if (read > 0) {
             executorService.submit {
-                selectorAction.add(Runnable {
+                selectorActions.add(Runnable {
                     selectionKey.interestOps(OP_WRITE)
                 })
                 selectionKey.selector().wakeup()
             }
         }
+    }
+
+    override fun close() {
+        handler?.close()
+    }
+
+    fun setHandler(handler: Handler<String>) {
+        this.handler = handler
     }
 }

@@ -54,9 +54,9 @@ class IoServer(
         printWriter.use {
             bufferedReader.use {
                 while (true) {
-                    val received = bufferedReader.readLine() ?: break
-                    handler?.handle(received)
-                    println("IoServer: received $received")
+                    val response = bufferedReader.readLine() ?: break
+                    handler?.handle(response)
+                    println("IoServer: received $response")
 
                     printWriter.println("OK")
                     println("IoServer: sending response OK")

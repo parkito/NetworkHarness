@@ -6,19 +6,23 @@ import java.nio.channels.SelectionKey.OP_READ
 import java.nio.channels.SocketChannel
 
 class WriteHandler(
-        private val pendingData: MutableSet<SocketChannel>
+        private val clients: MutableSet<SocketChannel>
 ) : SelectionHandler {
 
     override fun handle(selectionKey: SelectionKey) {
-        val sc = selectionKey.channel() as SocketChannel
-        val written = sc.write(ByteBuffer.wrap("OK".toByteArray()))
+        val socketChannel = selectionKey.channel() as SocketChannel
+        val written = socketChannel.write(ByteBuffer.wrap("OK".toByteArray()))
         println("NioServer: sending response OK")
         if (written == -1) {
-            sc.close()
-            pendingData.remove(sc)
-            println("Disconnected from in write $sc")
+            socketChannel.close()
+            clients.remove(socketChannel)
+            println("Disconnected from in write $socketChannel")
             return
         }
         selectionKey.interestOps(OP_READ)
+    }
+
+    override fun close() {
+        //no shared state
     }
 }
