@@ -13,19 +13,21 @@ import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
 import java.nio.channels.SocketChannel
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedDeque
+
 
 class NioServer(
         private val port: Int
 ) : Server<String> {
 
     override fun start() {
-        val pendingData: MutableMap<SocketChannel, Queue<ByteBuffer>> = HashMap()
-        val selectorAction: Queue<Runnable> = ConcurrentLinkedDeque()
+        val sharedSet = Collections.newSetFromMap<SocketChannel>(ConcurrentHashMap())
+        val selectorActions: Queue<Runnable> = ConcurrentLinkedDeque()
 
-        val acceptHandler: SelectionHandler = AcceptHandler(pendingData)
-        val readHandler: SelectionHandler = ReadHandler(pendingData, selectorAction)
-        val writeHandler: SelectionHandler = WriteHandler(pendingData)
+        val acceptHandler: SelectionHandler = AcceptHandler(sharedSet)
+        val readHandler: SelectionHandler = ReadHandler(sharedSet, selectorActions)
+        val writeHandler: SelectionHandler = WriteHandler(sharedSet)
 
         val ss = ServerSocketChannel.open()
         ss.bind(InetSocketAddress(port))
@@ -37,19 +39,23 @@ class NioServer(
 
         while (true) {
             selector.select()
-            processSelectorAction(selectorAction)
+            processSelectorAction(selectorActions)
             val keys = selector.selectedKeys()
             val it = keys.iterator()
             while (it.hasNext()) {
                 val key = it.next()
                 it.remove()
                 if (key.isValid) {
-                    if (key.isAcceptable) {
-                        acceptHandler.handle(key)
-                    } else if (key.isReadable) {
-                        readHandler.handle(key)
-                    } else if (key.isWritable) {
-                        writeHandler.handle(key)
+                    when {
+                        key.isAcceptable -> {
+                            acceptHandler.handle(key)
+                        }
+                        key.isReadable -> {
+                            readHandler.handle(key)
+                        }
+                        key.isWritable -> {
+                            writeHandler.handle(key)
+                        }
                     }
                 }
             }
@@ -57,12 +63,10 @@ class NioServer(
     }
 
     private fun processSelectorAction(selectorAction: Queue<Runnable>) {
-        println("Woke up ${selectorAction.size}")
         var task: Runnable? = selectorAction.peek()
         while (task != null) {
             task.run();
             task = selectorAction.poll()
-            println("in loop")
         }
     }
 

@@ -29,7 +29,7 @@ class IoClient(
         printWriter.println(message)
         printWriter.flush()
         val response = bufferedReader.readLine()
-        println("Publisher: received $response")
+        println("Client received a response $response")
     }
 
     override fun stop() {
@@ -44,18 +44,11 @@ class IoClient(
         printWriter.println("test")
         printWriter.flush()
         val response = bufferedReader.readLine()
-        print(response)
         if (response == "OK") {
             println("Test passed")
         } else {
             throw IllegalStateException("Sending test is failed")
         }
-    }
-
-    fun destroy() {
-        bufferedReader.close()
-        printWriter.close()
-        clientSocket.close()
     }
 }
 
@@ -74,5 +67,5 @@ fun main() {
         client.send(line)
     }
 
-    client.destroy()
+    client.stop()
 }

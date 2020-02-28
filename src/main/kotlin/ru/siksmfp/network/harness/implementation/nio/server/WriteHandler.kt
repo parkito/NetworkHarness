@@ -4,28 +4,20 @@ import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.SelectionKey.OP_READ
 import java.nio.channels.SocketChannel
-import java.util.*
 
 class WriteHandler(
-        private val pendingData: MutableMap<SocketChannel, Queue<ByteBuffer>>
+        private val pendingData: MutableSet<SocketChannel>
 ) : SelectionHandler {
 
     override fun handle(selectionKey: SelectionKey) {
         val sc = selectionKey.channel() as SocketChannel
-        val queue = pendingData[sc] ?: ArrayDeque()
-        while (!queue.isEmpty()) {
-            val written = sc.write(ByteBuffer.wrap("OK".toByteArray()))
-            println("writing $written")
-            if (written == -1) {
-                sc.close()
-                pendingData.remove(sc)
-                println("Disconnected from in write $sc")
-                return
-            }
-//            if (bb.hasRemaining()) {
-//                return
-//            }
-            queue.remove()
+        val written = sc.write(ByteBuffer.wrap("OK".toByteArray()))
+        println("NioServer: sending response OK")
+        if (written == -1) {
+            sc.close()
+            pendingData.remove(sc)
+            println("Disconnected from in write $sc")
+            return
         }
         selectionKey.interestOps(OP_READ)
     }
