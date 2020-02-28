@@ -21,7 +21,7 @@ class IoServer(
 
     override fun start() {
         serverSocket = ServerSocket(port)
-        println("Server started on $port")
+        println("Server io started on $port")
         while (true) {
             try {
                 val client = serverSocket.accept()
@@ -37,7 +37,7 @@ class IoServer(
     }
 
     override fun stop() {
-        println("Stopping server")
+        println("Stopping io server")
         executor.shutdown()
         serverSocket.close()
         handler?.close()

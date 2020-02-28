@@ -14,6 +14,7 @@ class NioClient(
     private var client: SocketChannel? = null
 
     override fun start() {
+        println("Connecting nio client to $host:$port")
         client = SocketChannel.open(InetSocketAddress(host, port))
     }
 
@@ -39,6 +40,7 @@ class NioClient(
     }
 
     override fun stop() {
+        println("Stopping nio client")
         client!!.close()
     }
 }

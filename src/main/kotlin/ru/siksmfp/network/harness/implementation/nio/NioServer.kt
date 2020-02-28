@@ -35,16 +35,16 @@ class NioServer(
         val selector = Selector.open()
         serverChannel!!.register(selector, OP_ACCEPT)
 
-        println("Server started on $port")
+        println("Server nio started on $port")
 
         while (true) {
             selector.select()
             processSelectorAction(selectorActions)
             val keys = selector.selectedKeys()
-            val it = keys.iterator()
-            while (it.hasNext()) {
-                val key = it.next()
-                it.remove()
+            val keysIterator = keys.iterator()
+            while (keysIterator.hasNext()) {
+                val key = keysIterator.next()
+                keysIterator.remove()
                 if (key.isValid) {
                     when {
                         key.isAcceptable -> {
@@ -71,7 +71,7 @@ class NioServer(
     }
 
     override fun stop() {
-        println("Stopping server")
+        println("Stopping nio server")
         readHandler.close()
         serverChannel!!.close()
     }

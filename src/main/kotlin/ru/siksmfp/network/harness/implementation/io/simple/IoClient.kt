@@ -16,7 +16,7 @@ class IoClient(
     private lateinit var clientSocket: Socket
 
     override fun start() {
-        println("Connecting client to $host:$port")
+        println("Connecting io client to $host:$port")
         clientSocket = Socket(host, port)
         printWriter = PrintWriter(clientSocket.getOutputStream(), false)
         bufferedReader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
@@ -33,14 +33,14 @@ class IoClient(
     }
 
     override fun stop() {
-        println("Stopping client")
+        println("Stopping io client")
         bufferedReader.close()
         printWriter.close()
         clientSocket.close()
     }
 
     fun test() {
-        println("Start testing")
+        println("Start io testing")
         printWriter.println("test")
         printWriter.flush()
         val response = bufferedReader.readLine()

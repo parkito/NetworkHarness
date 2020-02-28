@@ -5,28 +5,28 @@ import ru.siksmfp.network.harness.benchmarking.api.AbstractBenchmark
 import ru.siksmfp.network.harness.benchmarking.execution.BenchmarkExecutor
 import ru.siksmfp.network.harness.benchmarking.execution.state.IoSimpleFewThreadsState
 
-open class IoSimpleFewThreadBenchmark : AbstractBenchmark() {
+open class NioBenchmark : AbstractBenchmark() {
 
     @Benchmark
-    fun smallFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+    fun nioSmallFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
         return BenchmarkExecutor(state.getPropertyForSmall())
                 .executeTest()
     }
 
     @Benchmark
-    fun middleFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+    fun nioMiddleFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
         return BenchmarkExecutor(state.getPropertyForMiddle())
                 .executeTest()
     }
 
     @Benchmark
-    fun bigFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+    fun nioBigFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
         return BenchmarkExecutor(state.getPropertyForBig())
                 .executeTest()
     }
 
     @Benchmark
-    fun largeFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
+    fun nioLargeFileBenchmark(state: IoSimpleFewThreadsState): Boolean {
         return BenchmarkExecutor(state.getPropertyForLarge())
                 .executeTest()
     }
