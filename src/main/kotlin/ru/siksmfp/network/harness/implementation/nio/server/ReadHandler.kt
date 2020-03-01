@@ -17,11 +17,11 @@ class ReadHandler(
 
     private var handler: Handler<String>? = null
 
-    private var executorService: ExecutorService = Executors.newFixedThreadPool(3)
+    private var executorService: ExecutorService = Executors.newFixedThreadPool(1)
 
     override fun handle(selectionKey: SelectionKey) {
         val sc = selectionKey.channel() as SocketChannel
-        val bb = ByteBuffer.allocateDirect(80)
+        val bb = ByteBuffer.allocateDirect(10000)//todo improve memory management
         val read = sc.read(bb)
         if (read == -1) {
             clients.remove(sc)
@@ -45,6 +45,7 @@ class ReadHandler(
 
     override fun close() {
         handler?.close()
+        executorService.shutdown()
     }
 
     fun setHandler(handler: Handler<String>) {
