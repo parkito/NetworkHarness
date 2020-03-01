@@ -28,7 +28,7 @@ class FileComparator(
             val baseOccurrences = compareStringInclude(baseFile, it.toString())
             val comparableOccurrences = compareStringInclude(comparableFile, it.toString())
             if (baseOccurrences != comparableOccurrences) {
-                print("Character $it. Base number $baseOccurrences VS Comparable number $comparableOccurrences")
+                println("Character $it. Base number $baseOccurrences VS Comparable number $comparableOccurrences")
                 throw IllegalStateException("Files are different")
             }
         }
