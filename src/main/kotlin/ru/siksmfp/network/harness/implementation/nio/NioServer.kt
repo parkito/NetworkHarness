@@ -6,6 +6,7 @@ import ru.siksmfp.network.harness.implementation.nio.server.AcceptHandler
 import ru.siksmfp.network.harness.implementation.nio.server.ReadHandler
 import ru.siksmfp.network.harness.implementation.nio.server.WriteHandler
 import java.net.InetSocketAddress
+import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey.OP_ACCEPT
 import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
@@ -23,7 +24,7 @@ class NioServer(
 
     private lateinit var serverChannel: ServerSocketChannel
 
-    private val clients = Collections.newSetFromMap<SocketChannel>(ConcurrentHashMap())
+    private val clients = ConcurrentHashMap<SocketChannel, ByteBuffer>()
     private val selectorActions: Queue<Runnable> = ConcurrentLinkedDeque()
 
     private val acceptHandler = AcceptHandler(clients)
@@ -79,7 +80,7 @@ class NioServer(
         println("Stopping nio server")
         isRunning.set(false)
         readHandler.close()
-        clients.forEach { it.close() }
+        clients.forEach { it.key.close() }
         serverChannel.close()
         selectorActions.clear()
     }

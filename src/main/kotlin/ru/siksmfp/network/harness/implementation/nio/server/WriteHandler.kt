@@ -6,7 +6,7 @@ import java.nio.channels.SelectionKey.OP_READ
 import java.nio.channels.SocketChannel
 
 class WriteHandler(
-        private val clients: MutableSet<SocketChannel>
+        private val clients: MutableMap<SocketChannel, ByteBuffer>
 ) : SelectionHandler {
 
     override fun handle(selectionKey: SelectionKey) {

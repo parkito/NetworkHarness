@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class ReadHandler(
-        private val clients: MutableSet<SocketChannel>,
+        private val clients: MutableMap<SocketChannel, ByteBuffer>,
         private val selectorActions: Queue<Runnable>
 ) : SelectionHandler {
 
@@ -21,7 +21,7 @@ class ReadHandler(
 
     override fun handle(selectionKey: SelectionKey) {
         val sc = selectionKey.channel() as SocketChannel
-        val bb = ByteBuffer.allocateDirect(10000)//todo improve memory management
+        val bb = clients[sc]
         val read = sc.read(bb)
         if (read == -1) {
             clients.remove(sc)
@@ -29,7 +29,7 @@ class ReadHandler(
             println("Disconnected from in read $sc")
             return
         }
-        val response = byteBufferToString(bb, read)
+        val response = byteBufferToString(bb!!, read)
         handler?.handle(response)
         println("NioServer: received $response")
 
