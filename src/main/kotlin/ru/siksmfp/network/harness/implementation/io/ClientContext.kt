@@ -1,0 +1,26 @@
+package ru.siksmfp.network.harness.implementation.io
+
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.PrintWriter
+import java.net.Socket
+
+class ClientContext(private val clientSocket: Socket) {
+    private var printWriter: PrintWriter = PrintWriter(clientSocket.getOutputStream(), false)
+    private var bufferedReader: BufferedReader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
+
+    fun close() {
+        bufferedReader.close()
+        printWriter.close()
+        clientSocket.close()
+    }
+
+    fun sentAndReceive(message: String): String {
+        printWriter.println(message)
+        printWriter.flush()
+        return bufferedReader.readLine()
+    }
+
+
+}
+

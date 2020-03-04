@@ -1,49 +1,38 @@
 package ru.siksmfp.network.harness.implementation.io.ssl
 
 import ru.siksmfp.network.harness.api.Client
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.io.PrintWriter
-import java.net.Socket
+import ru.siksmfp.network.harness.implementation.io.ClientContext
 import java.util.Scanner
 
 class IoSSLClient(
         private val host: String,
         private val port: Int
 ) : Client<String> {
-    private lateinit var printWriter: PrintWriter
-    private lateinit var bufferedReader: BufferedReader
-    private lateinit var clientSocket: Socket
+    private lateinit var clientContext: ClientContext
 
     override fun start() {
         println("Connecting io client to $host:$port")
-        clientSocket = IoSSLUtils.constructSSLClientFactory().createSocket(host, port)
-        printWriter = PrintWriter(clientSocket.getOutputStream(), false)
-        bufferedReader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
+        val clientSocket = IoSSLUtils.constructSSLClientFactory().createSocket(host, port)
+        clientContext = ClientContext(clientSocket)
         println("Connected to $host:$port")
     }
 
     @Synchronized
     override fun send(message: String) {
         println("Sending $message")
-        printWriter.println(message)
-        printWriter.flush()
-        val response = bufferedReader.readLine()
+        val response = clientContext.sentAndReceive(message)
         println("Client received a response $response")
     }
 
     override fun stop() {
-        println("Stopping io client")
-        bufferedReader.close()
-        printWriter.close()
-        clientSocket.close()
+        println("Stopping io SSL client")
+        clientContext.close()
+
     }
 
     fun test() {
         println("Start io testing")
-        printWriter.println("test")
-        printWriter.flush()
-        val response = bufferedReader.readLine()
+        val response = clientContext.sentAndReceive("test")
         if (response == "OK") {
             println("Test passed")
         } else {

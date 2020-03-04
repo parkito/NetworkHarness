@@ -1,49 +1,37 @@
 package ru.siksmfp.network.harness.implementation.io.simple
 
 import ru.siksmfp.network.harness.api.Client
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.io.PrintWriter
+import ru.siksmfp.network.harness.implementation.io.ClientContext
 import java.net.Socket
-import java.util.*
+import java.util.Scanner
 
-class IoClient(
+open class IoClient(
         private val host: String,
         private val port: Int
 ) : Client<String> {
-    private lateinit var printWriter: PrintWriter
-    private lateinit var bufferedReader: BufferedReader
-    private lateinit var clientSocket: Socket
+    private lateinit var clientContext: ClientContext
 
     override fun start() {
         println("Connecting io client to $host:$port")
-        clientSocket = Socket(host, port)
-        printWriter = PrintWriter(clientSocket.getOutputStream(), false)
-        bufferedReader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
+        clientContext = ClientContext(Socket(host, port))
         println("Connected to $host:$port")
     }
 
     @Synchronized
     override fun send(message: String) {
         println("Sending $message")
-        printWriter.println(message)
-        printWriter.flush()
-        val response = bufferedReader.readLine()
+        val response = clientContext.sentAndReceive(message)
         println("Client received a response $response")
     }
 
     override fun stop() {
         println("Stopping io client")
-        bufferedReader.close()
-        printWriter.close()
-        clientSocket.close()
+        clientContext.close()
     }
 
     fun test() {
         println("Io Start io testing")
-        printWriter.println("test")
-        printWriter.flush()
-        val response = bufferedReader.readLine()
+        val response = clientContext.sentAndReceive("test")
         if (response == "OK") {
             println("Test passed")
         } else {
