@@ -6,5 +6,7 @@ interface Client<T> {
 
     fun send(message: T)
 
+    fun test()
+
     fun stop()
 }

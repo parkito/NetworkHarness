@@ -21,6 +21,13 @@ class ClientContext(private val clientSocket: Socket) {
         return bufferedReader.readLine()
     }
 
-
+    fun test() {
+        val response = sentAndReceive("test")
+        if (response == "OK") {
+            println("Test passed")
+        } else {
+            throw IllegalStateException("Sending test is failed")
+        }
+    }
 }
 

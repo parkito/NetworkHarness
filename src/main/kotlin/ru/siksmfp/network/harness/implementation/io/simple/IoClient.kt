@@ -3,7 +3,6 @@ package ru.siksmfp.network.harness.implementation.io.simple
 import ru.siksmfp.network.harness.api.Client
 import ru.siksmfp.network.harness.implementation.io.ClientContext
 import java.net.Socket
-import java.util.Scanner
 
 open class IoClient(
         private val host: String,
@@ -29,31 +28,8 @@ open class IoClient(
         clientContext.close()
     }
 
-    fun test() {
+    override fun test() {
         println("Io Start io testing")
-        val response = clientContext.sentAndReceive("test")
-        if (response == "OK") {
-            println("Test passed")
-        } else {
-            throw IllegalStateException("Sending test is failed")
-        }
+        clientContext.test()
     }
-}
-
-fun main() {
-    val client = IoClient("localhost", 8081)
-    client.start()
-    client.test()
-
-    val scanner = Scanner(System.`in`)
-
-    while (scanner.hasNext()) {
-        val line = scanner.next()
-        if (line == "stop") {
-            break
-        }
-        client.send(line)
-    }
-
-    client.stop()
 }

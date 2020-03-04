@@ -48,19 +48,5 @@ class NioClient(
 }
 
 fun main() {
-    val client = NioClient("localhost", 8081)
-    client.start()
-    client.test()
 
-    val scanner = Scanner(System.`in`)
-
-    while (scanner.hasNext()) {
-        val line = scanner.next()
-        if (line == "stop") {
-            break
-        }
-        client.send(line)
-    }
-
-    client.stop()
 }

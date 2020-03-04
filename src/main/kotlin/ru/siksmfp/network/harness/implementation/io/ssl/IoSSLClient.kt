@@ -2,7 +2,6 @@ package ru.siksmfp.network.harness.implementation.io.ssl
 
 import ru.siksmfp.network.harness.api.Client
 import ru.siksmfp.network.harness.implementation.io.ClientContext
-import java.util.Scanner
 
 class IoSSLClient(
         private val host: String,
@@ -30,31 +29,8 @@ class IoSSLClient(
 
     }
 
-    fun test() {
-        println("Start io testing")
-        val response = clientContext.sentAndReceive("test")
-        if (response == "OK") {
-            println("Test passed")
-        } else {
-            throw IllegalStateException("Sending test is failed")
-        }
+    override fun test() {
+        println("Start io SSL testing")
+        clientContext.test()
     }
-}
-
-fun main() {
-    val client = IoSSLClient("localhost", 8081)
-    client.start()
-    client.test()
-
-    val scanner = Scanner(System.`in`)
-
-    while (scanner.hasNext()) {
-        val line = scanner.next()
-        if (line == "stop") {
-            break
-        }
-        client.send(line)
-    }
-
-    client.stop()
 }

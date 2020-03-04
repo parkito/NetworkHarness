@@ -66,7 +66,3 @@ class IoServer(
         }
     }
 }
-
-fun main() {
-    IoServer(8081, 5).start()
-}
