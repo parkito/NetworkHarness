@@ -1,4 +1,4 @@
-package ru.siksmfp.network.harness.implementation.io.simple
+package ru.siksmfp.network.harness.implementation.io.ssl
 
 import ru.siksmfp.network.harness.api.Client
 import java.io.BufferedReader
@@ -7,7 +7,7 @@ import java.io.PrintWriter
 import java.net.Socket
 import java.util.*
 
-class IoClient(
+class IoSSLClient(
         private val host: String,
         private val port: Int
 ) : Client<String> {
@@ -40,7 +40,7 @@ class IoClient(
     }
 
     fun test() {
-        println("Io Start io testing")
+        println("Start io testing")
         printWriter.println("test")
         printWriter.flush()
         val response = bufferedReader.readLine()
@@ -53,7 +53,7 @@ class IoClient(
 }
 
 fun main() {
-    val client = IoClient("localhost", 8081)
+    val client = IoSSLClient("localhost", 8081)
     client.start()
     client.test()
 

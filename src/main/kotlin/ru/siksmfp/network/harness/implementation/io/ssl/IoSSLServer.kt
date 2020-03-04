@@ -1,4 +1,4 @@
-package ru.siksmfp.network.harness.implementation.io.simple
+package ru.siksmfp.network.harness.implementation.io.ssl
 
 import ru.siksmfp.network.harness.api.Handler
 import ru.siksmfp.network.harness.api.Server
@@ -9,9 +9,14 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.ServerSocket
 import java.net.Socket
+import java.security.KeyStore
 import java.util.concurrent.ExecutorService
+import javax.net.ssl.KeyManagerFactory
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManagerFactory
 
-class IoServer(
+
+class IoSSLServer(
         private val port: Int,
         threadNumber: Int?
 ) : Server<String> {
@@ -20,8 +25,22 @@ class IoServer(
     private lateinit var serverSocket: ServerSocket
 
     override fun start() {
-        serverSocket = ServerSocket(port)
-        println("Server io started on $port")
+        val ks = KeyStore.getInstance("pkcs12")
+        ks.load(Thread.currentThread().contextClassLoader.getResourceAsStream("selfsigned.jks"), "11223344".toCharArray())
+
+        val kmf = KeyManagerFactory.getInstance("SunX509");
+        kmf.init(ks, "11223344".toCharArray());
+
+        val tmf = TrustManagerFactory.getInstance("SunX509");
+        tmf.init(ks);
+
+        val sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null)
+
+        val sslSocketFactory = sslContext.serverSocketFactory
+
+        serverSocket = sslSocketFactory.createServerSocket(port)
+        println("Io SSL Server io started on $port")
         while (true) {
             try {
                 val client = serverSocket.accept()
@@ -37,7 +56,7 @@ class IoServer(
     }
 
     override fun stop() {
-        println("Io stopping io server")
+        println("Stopping io SSL server")
         executor.shutdown()
         serverSocket.close()
         handler?.close()
@@ -68,5 +87,5 @@ class IoServer(
 }
 
 fun main() {
-    IoServer(8081, 5).start()
+    IoSSLServer(8081, 5).start()
 }
