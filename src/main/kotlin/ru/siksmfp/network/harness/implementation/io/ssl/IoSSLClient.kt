@@ -5,7 +5,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
-import java.util.*
+import java.util.Scanner
 
 class IoSSLClient(
         private val host: String,
@@ -17,7 +17,7 @@ class IoSSLClient(
 
     override fun start() {
         println("Connecting io client to $host:$port")
-        clientSocket = Socket(host, port)
+        clientSocket = IoSSLUtils.constructSSLClientFactory().createSocket(host, port)
         printWriter = PrintWriter(clientSocket.getOutputStream(), false)
         bufferedReader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
         println("Connected to $host:$port")

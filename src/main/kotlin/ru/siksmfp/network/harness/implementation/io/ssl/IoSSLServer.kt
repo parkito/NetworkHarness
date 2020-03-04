@@ -9,12 +9,7 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.ServerSocket
 import java.net.Socket
-import java.security.KeyStore
 import java.util.concurrent.ExecutorService
-import javax.net.ssl.KeyManagerFactory
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManagerFactory
-
 
 class IoSSLServer(
         private val port: Int,
@@ -25,22 +20,9 @@ class IoSSLServer(
     private lateinit var serverSocket: ServerSocket
 
     override fun start() {
-        val ks = KeyStore.getInstance("pkcs12")
-        ks.load(Thread.currentThread().contextClassLoader.getResourceAsStream("selfsigned.jks"), "11223344".toCharArray())
-
-        val kmf = KeyManagerFactory.getInstance("SunX509");
-        kmf.init(ks, "11223344".toCharArray());
-
-        val tmf = TrustManagerFactory.getInstance("SunX509");
-        tmf.init(ks);
-
-        val sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null)
-
-        val sslSocketFactory = sslContext.serverSocketFactory
-
-        serverSocket = sslSocketFactory.createServerSocket(port)
+        serverSocket = IoSSLUtils.constructSSLServerFactory().createServerSocket(port)
         println("Io SSL Server io started on $port")
+
         while (true) {
             try {
                 val client = serverSocket.accept()
