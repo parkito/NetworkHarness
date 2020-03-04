@@ -11,6 +11,10 @@ fun startIoServer() {
     IoServer(8081, 5).start()
 }
 
+fun startIoSSLServer() {
+    IoSSLServer(8081, 5).start()
+}
+
 fun startIoClient() {
     val client = IoClient("localhost", 8081)
     processClientInput(client)
@@ -23,14 +27,9 @@ fun startIoSSLClient() {
     client.stop()
 }
 
-val scanner = Scanner(System.`in`)
-
-fun startIoSSLServer() {
-    IoSSLServer(8081, 5).start()
-}
-
 fun testIo() {
     val server = IoServer(8081, 5)
+    Thread { server.start() }.start()
     testClient(IoClient("localhost", 8081))
     server.stop()
     println("IO successfully tested")
@@ -38,12 +37,14 @@ fun testIo() {
 
 fun testIoSSL() {
     val server = IoSSLServer(8081, 5)
+    Thread { server.start() }.start()
     testClient(IoSSLClient("localhost", 8081))
     server.stop()
     println("IO SSL successfully tested")
 }
 
 private fun processClientInput(client: Client<String>) {
+    val scanner = Scanner(System.`in`)
     while (scanner.hasNext()) {
         val line = scanner.next()
         if (line == "stop") {
@@ -57,4 +58,9 @@ private fun testClient(client: Client<String>) {
     client.start()
     client.test()
     client.stop()
+}
+
+fun main() {
+    testIo()
+    testIoSSL()
 }

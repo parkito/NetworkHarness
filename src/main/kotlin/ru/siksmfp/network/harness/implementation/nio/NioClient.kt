@@ -4,7 +4,6 @@ import ru.siksmfp.network.harness.api.Client
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.SocketChannel
-import java.util.*
 
 class NioClient(
         private val host: String,
@@ -29,7 +28,7 @@ class NioClient(
         }
     }
 
-    fun test() {
+    override fun test() {
         client!!.write(ByteBuffer.wrap("test".toByteArray()))
         val bb = ByteBuffer.allocate(2)
         val read = client!!.read(bb)
