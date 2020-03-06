@@ -7,6 +7,7 @@ import tlschannel.NeedsWriteException
 import tlschannel.TlsChannel
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
+import java.nio.channels.SelectionKey.OP_READ
 import java.nio.channels.SelectionKey.OP_WRITE
 import java.nio.channels.SocketChannel
 import java.util.Queue
@@ -23,38 +24,31 @@ class SSLReadHandler(
     private var executorService: ExecutorService = Executors.newFixedThreadPool(1)
 
     override fun handle(selectionKey: SelectionKey) {
-        println("reding")
         val tlsChannel = selectionKey.attachment() as TlsChannel
         val bb = ByteBuffer.allocate(10000) //todo optimize
 
         try {
-            // write received bytes in stdout
-            val c: Int = tlsChannel.read(bb)
-            if (c > 0) {
-                bb.flip()
-//                print(tlschannel.example.NonBlockingServer.utf8.decode(buffer))
+            val read: Int = tlsChannel.read(bb)
+            if (read > 0) {
+                val response = byteBufferToString(bb!!, read)
+                println("NioSSLServer: received $response")
+                handler?.handle(response)
+
+                executorService.submit {
+                    selectorActions.add(Runnable {
+                        selectionKey.interestOps(OP_WRITE)
+                    })
+                    selectionKey.selector().wakeup()
+                }
             }
-            if (c < 0) {
+            if (read < 0) {
                 tlsChannel.close()
             }
         } catch (e: NeedsReadException) {
-//            key.interestOps(SelectionKey.OP_READ) // overwrites previous value
+            selectionKey.interestOps(OP_READ)
         } catch (e: NeedsWriteException) {
-//            key.interestOps(OP_WRITE) // overwrites previous value
+            selectionKey.interestOps(OP_WRITE)
         }
-        println("red")
-//        val response = byteBufferToString(bb!!, read)
-//        handler?.handle(response)
-        println("NioServer: received $response")
-
-//        if (read > 0) {
-//            executorService.submit {
-//                selectorActions.add(Runnable {
-//                    selectionKey.interestOps(OP_WRITE)
-//                })
-//                selectionKey.selector().wakeup()
-//            }
-//        }
     }
 
     override fun close() {

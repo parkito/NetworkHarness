@@ -2,9 +2,9 @@ package ru.siksmfp.network.harness.implementation.nio.simple
 
 import ru.siksmfp.network.harness.api.Handler
 import ru.siksmfp.network.harness.api.Server
-import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLAcceptHandler
-import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLReadHandler
-import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLWriteHandler
+import ru.siksmfp.network.harness.implementation.nio.simple.server.AcceptHandler
+import ru.siksmfp.network.harness.implementation.nio.simple.server.ReadHandler
+import ru.siksmfp.network.harness.implementation.nio.simple.server.WriteHandler
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey.OP_ACCEPT
@@ -26,9 +26,9 @@ class NioServer(
     private val clients = ConcurrentHashMap<SocketChannel, ByteBuffer>()
     private val selectorActions: Queue<Runnable> = ConcurrentLinkedDeque()
 
-    private val acceptHandler = SSLAcceptHandler(clients)
-    private val readHandler = SSLReadHandler(clients, selectorActions)
-    private val writeHandler = SSLWriteHandler(clients)
+    private val acceptHandler = AcceptHandler(clients)
+    private val readHandler = ReadHandler(clients, selectorActions)
+    private val writeHandler = WriteHandler(clients)
 
     private lateinit var isRunning: AtomicBoolean
 
