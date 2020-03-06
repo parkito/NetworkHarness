@@ -40,6 +40,6 @@ fun processClientInput(client: Client<String>) {
 }
 
 fun main() {
-    Thread { startIoServer() }.start()
+//    Thread { startIoServer() }.start()
     startIoClient()
 }

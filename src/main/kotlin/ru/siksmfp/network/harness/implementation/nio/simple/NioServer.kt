@@ -1,21 +1,20 @@
-package ru.siksmfp.network.harness.implementation.nio
+package ru.siksmfp.network.harness.implementation.nio.simple
 
 import ru.siksmfp.network.harness.api.Handler
 import ru.siksmfp.network.harness.api.Server
-import ru.siksmfp.network.harness.implementation.nio.server.AcceptHandler
-import ru.siksmfp.network.harness.implementation.nio.server.ReadHandler
-import ru.siksmfp.network.harness.implementation.nio.server.WriteHandler
+import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLAcceptHandler
+import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLReadHandler
+import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLWriteHandler
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey.OP_ACCEPT
 import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
 import java.nio.channels.SocketChannel
-import java.util.*
+import java.util.Queue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.atomic.AtomicBoolean
-
 
 class NioServer(
         private val port: Int,
@@ -27,9 +26,9 @@ class NioServer(
     private val clients = ConcurrentHashMap<SocketChannel, ByteBuffer>()
     private val selectorActions: Queue<Runnable> = ConcurrentLinkedDeque()
 
-    private val acceptHandler = AcceptHandler(clients)
-    private val readHandler = ReadHandler(clients, selectorActions)
-    private val writeHandler = WriteHandler(clients)
+    private val acceptHandler = SSLAcceptHandler(clients)
+    private val readHandler = SSLReadHandler(clients, selectorActions)
+    private val writeHandler = SSLWriteHandler(clients)
 
     private lateinit var isRunning: AtomicBoolean
 
@@ -88,8 +87,4 @@ class NioServer(
     override fun setHandler(handler: Handler<String>) {
         readHandler.setHandler(handler)
     }
-}
-
-fun main() {
-    NioServer(8081, null).start()
 }

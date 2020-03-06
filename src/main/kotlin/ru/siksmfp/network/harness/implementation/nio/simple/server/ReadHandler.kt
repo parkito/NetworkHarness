@@ -1,12 +1,12 @@
-package ru.siksmfp.network.harness.implementation.nio.server
+package ru.siksmfp.network.harness.implementation.nio.simple.server
 
 import ru.siksmfp.network.harness.api.Handler
-import ru.siksmfp.network.harness.implementation.nio.byteBufferToString
+import ru.siksmfp.network.harness.implementation.nio.simple.byteBufferToString
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.SelectionKey.OP_WRITE
 import java.nio.channels.SocketChannel
-import java.util.*
+import java.util.Queue
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

@@ -1,4 +1,4 @@
-package ru.siksmfp.network.harness.implementation.nio.server
+package ru.siksmfp.network.harness.implementation.nio.simple.server
 
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey

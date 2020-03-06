@@ -1,4 +1,4 @@
-package ru.siksmfp.network.harness.implementation.nio
+package ru.siksmfp.network.harness.implementation.nio.simple
 
 import java.nio.ByteBuffer
 

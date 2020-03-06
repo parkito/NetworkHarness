@@ -5,7 +5,7 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
 
-class ClientContext(private val clientSocket: Socket) {
+class IoClientContext(private val clientSocket: Socket) {
     private var printWriter: PrintWriter = PrintWriter(clientSocket.getOutputStream(), false)
     private var bufferedReader: BufferedReader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
 

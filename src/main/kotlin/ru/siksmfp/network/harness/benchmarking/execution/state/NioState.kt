@@ -3,8 +3,8 @@ package ru.siksmfp.network.harness.benchmarking.execution.state
 import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.State
 import ru.siksmfp.network.harness.benchmarking.api.AbstractState
-import ru.siksmfp.network.harness.implementation.nio.NioClient
-import ru.siksmfp.network.harness.implementation.nio.NioServer
+import ru.siksmfp.network.harness.implementation.nio.simple.NioClient
+import ru.siksmfp.network.harness.implementation.nio.simple.NioServer
 
 @State(Scope.Benchmark)
 open class NioState : AbstractState(

@@ -1,22 +1,24 @@
-package ru.siksmfp.network.harness.implementation.nio.server
+package ru.siksmfp.network.harness.implementation.nio.simple.server
 
+import tlschannel.TlsChannel
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.SelectionKey.OP_READ
 import java.nio.channels.SocketChannel
 
-class WriteHandler(
+class SSLWriteHandler(
         private val clients: MutableMap<SocketChannel, ByteBuffer>
 ) : SelectionHandler {
 
     override fun handle(selectionKey: SelectionKey) {
-        val socketChannel = selectionKey.channel() as SocketChannel
-        val written = socketChannel.write(ByteBuffer.wrap("OK".toByteArray()))
+        val tlsChannel = selectionKey.attachment() as TlsChannel
+
+        val written = tlsChannel.write(ByteBuffer.wrap("OK".toByteArray()))
         println("NioServer: sending response OK")
         if (written == -1) {
-            socketChannel.close()
-            clients.remove(socketChannel)
-            println("Disconnected from in write $socketChannel")
+            tlsChannel.close()
+//            clients.remove(socketChannel)
+            println("Disconnected from in write")
             return
         }
         selectionKey.interestOps(OP_READ)

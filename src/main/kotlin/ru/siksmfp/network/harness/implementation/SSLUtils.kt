@@ -1,13 +1,14 @@
-package ru.siksmfp.network.harness.implementation.io.ssl
+package ru.siksmfp.network.harness.implementation
 
 import java.security.KeyStore
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLEngine
 import javax.net.ssl.SSLServerSocketFactory
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManagerFactory
 
-object IoSSLUtils {
+object SSLUtils {
     private val sslContext: SSLContext
 
     init {
@@ -30,5 +31,13 @@ object IoSSLUtils {
 
     fun constructSSLClientFactory(): SSLSocketFactory {
         return sslContext.socketFactory
+    }
+
+    fun constructSSLContext(): SSLContext {
+        return sslContext
+    }
+
+    fun constructSSLEngine(): SSLEngine {
+        return sslContext.createSSLEngine()
     }
 }
