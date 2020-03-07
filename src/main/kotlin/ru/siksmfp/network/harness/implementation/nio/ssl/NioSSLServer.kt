@@ -88,7 +88,3 @@ class NioSSLServer(
         readHandler.setHandler(handler)
     }
 }
-
-fun main() {
-    NioSSLServer(8081, null).start()
-}

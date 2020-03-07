@@ -37,9 +37,3 @@ class NioSSLClient(
         clientManager
     }
 }
-
-fun main() {
-    val client = NioSSLClient("localhost", 8081)
-    client.start()
-    client.test()
-}

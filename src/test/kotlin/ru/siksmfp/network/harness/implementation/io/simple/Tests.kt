@@ -29,7 +29,7 @@ class Tests {
     @Test
     fun testIo() {
         val server = IoServer(8081, 5)
-        executorService.submit { server.start() }
+        executorService.execute { server.start() }
         Thread.sleep(1000)
         testClient(IoClient("localhost", 8081))
         server.stop()
@@ -39,7 +39,7 @@ class Tests {
     @Test
     fun testIoSSL() {
         val server = IoSSLServer(8081, 5)
-        executorService.submit { server.start() }
+        executorService.execute { server.start() }
         Thread.sleep(1000)
         testClient(IoSSLClient("localhost", 8081))
         server.stop()
@@ -49,17 +49,18 @@ class Tests {
     @Test
     fun testNio() {
         val server = NioServer(8081, 5)
-        executorService.submit { server.start() }
+        executorService.execute { server.start() }
         Thread.sleep(1000)
         testClient(NioClient("localhost", 8081))
         server.stop()
+        Thread.sleep(1000)
         println("Nio successfully tested")
     }
 
-    @Test
+        @Test
     fun testNioSSL() {
         val server = NioSSLServer(8081, 5)
-        executorService.submit { server.start() }
+        executorService.execute { server.start() }
         Thread.sleep(1000)
         testClient(NioSSLClient("localhost", 8081))
         server.stop()

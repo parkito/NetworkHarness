@@ -22,6 +22,7 @@ class NioServer(
 ) : Server<String> {
 
     private lateinit var serverChannel: ServerSocketChannel
+    private lateinit var selector: Selector
 
     private val clients = ConcurrentHashMap<SocketChannel, ByteBuffer>()
     private val selectorActions: Queue<Runnable> = ConcurrentLinkedDeque()
@@ -37,7 +38,7 @@ class NioServer(
         serverChannel = ServerSocketChannel.open()
         serverChannel.bind(InetSocketAddress(port))
         serverChannel.configureBlocking(false)
-        val selector = Selector.open()
+        selector = Selector.open()
         serverChannel.register(selector, OP_ACCEPT)
 
         println("Server nio started on $port")
@@ -76,12 +77,13 @@ class NioServer(
     }
 
     override fun stop() {
-        println("Stopping nio server")
         isRunning.set(false)
         readHandler.close()
         clients.forEach { it.key.close() }
         serverChannel.close()
+        selector.close()
         selectorActions.clear()
+        println("Nio server stopped")
     }
 
     override fun setHandler(handler: Handler<String>) {
