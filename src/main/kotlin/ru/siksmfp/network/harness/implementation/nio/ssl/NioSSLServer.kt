@@ -6,11 +6,11 @@ import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLAcceptHand
 import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLReadHandler
 import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLWriteHandler
 import java.net.InetSocketAddress
-import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
 import java.nio.channels.SocketChannel
+import java.util.Collections
 import java.util.Queue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedDeque
@@ -23,11 +23,11 @@ class NioSSLServer(
 
     private lateinit var serverChannel: ServerSocketChannel
 
-    private val clients = ConcurrentHashMap<SocketChannel, ByteBuffer>()
+    private val clients = Collections.newSetFromMap<SocketChannel>(ConcurrentHashMap())
     private val selectorActions: Queue<Runnable> = ConcurrentLinkedDeque()
 
     private val acceptHandler = SSLAcceptHandler(clients)
-    private val readHandler = SSLReadHandler(clients, selectorActions)
+    private val readHandler = SSLReadHandler(selectorActions)
     private val writeHandler = SSLWriteHandler(clients)
 
     private lateinit var isRunning: AtomicBoolean
@@ -79,7 +79,7 @@ class NioSSLServer(
         println("Stopping nio server")
         isRunning.set(false)
         readHandler.close()
-        clients.forEach { it.key.close() }
+        clients.forEach { it.close() }
         serverChannel.close()
         selectorActions.clear()
     }

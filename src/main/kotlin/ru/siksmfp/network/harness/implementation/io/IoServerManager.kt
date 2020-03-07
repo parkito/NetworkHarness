@@ -10,7 +10,7 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.ExecutorService
 
-class IoServerContext(private val serverSocket: ServerSocket,
+class IoServerManager(private val serverSocket: ServerSocket,
                       private val threadNumber: Int?
 ) {
     private val executor: ExecutorService = createExecutor(threadNumber)

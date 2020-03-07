@@ -1,29 +1,25 @@
 package ru.siksmfp.network.harness.implementation.nio.simple.server
 
 import ru.siksmfp.network.harness.api.Handler
-import ru.siksmfp.network.harness.implementation.nio.NioServerContext
+import ru.siksmfp.network.harness.implementation.nio.ssl.server.NioSSLServerContext
 import ru.siksmfp.network.harness.implementation.nio.simple.byteBufferToString
 import tlschannel.NeedsReadException
 import tlschannel.NeedsWriteException
-import tlschannel.TlsChannel
-import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.SelectionKey.OP_READ
 import java.nio.channels.SelectionKey.OP_WRITE
-import java.nio.channels.SocketChannel
 import java.util.Queue
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class SSLReadHandler(
-        private val clients: MutableMap<SocketChannel, ByteBuffer>,
         private val selectorActions: Queue<Runnable>
 ) : SelectionHandler {
     private var handler: Handler<String>? = null
     private var executorService: ExecutorService = Executors.newFixedThreadPool(1)
 
     override fun handle(selectionKey: SelectionKey) {
-        val context = selectionKey.attachment() as NioServerContext
+        val context = selectionKey.attachment() as NioSSLServerContext
         val tlsChannel = context.tlsChannel
         val bb = context.buffer
         try {

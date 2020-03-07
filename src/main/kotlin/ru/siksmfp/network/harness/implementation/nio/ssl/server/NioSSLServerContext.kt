@@ -1,9 +1,9 @@
-package ru.siksmfp.network.harness.implementation.nio
+package ru.siksmfp.network.harness.implementation.nio.ssl.server
 
 import tlschannel.TlsChannel
 import java.nio.ByteBuffer
 
-class NioServerContext(
+class NioSSLServerContext(
         val tlsChannel: TlsChannel,
         val buffer: ByteBuffer
 )

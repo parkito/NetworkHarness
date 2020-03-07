@@ -7,7 +7,7 @@ import java.nio.channels.SelectionKey.OP_READ
 import java.nio.channels.SocketChannel
 
 class SSLWriteHandler(
-        private val clients: MutableMap<SocketChannel, ByteBuffer>
+        private val clients: MutableSet<SocketChannel>
 ) : SelectionHandler {
 
     override fun handle(selectionKey: SelectionKey) {
