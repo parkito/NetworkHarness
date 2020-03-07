@@ -14,7 +14,6 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class Tests {
-
     private lateinit var executorService: ExecutorService
 
     @BeforeEach
@@ -31,6 +30,7 @@ class Tests {
     fun testIo() {
         val server = IoServer(8081, 5)
         executorService.submit { server.start() }
+        Thread.sleep(1000)
         testClient(IoClient("localhost", 8081))
         server.stop()
         println("Io successfully tested")
@@ -40,6 +40,7 @@ class Tests {
     fun testIoSSL() {
         val server = IoSSLServer(8081, 5)
         executorService.submit { server.start() }
+        Thread.sleep(1000)
         testClient(IoSSLClient("localhost", 8081))
         server.stop()
         println("Io SSL successfully tested")
@@ -49,6 +50,7 @@ class Tests {
     fun testNio() {
         val server = NioServer(8081, 5)
         executorService.submit { server.start() }
+        Thread.sleep(1000)
         testClient(NioClient("localhost", 8081))
         server.stop()
         println("Nio successfully tested")
@@ -58,6 +60,7 @@ class Tests {
     fun testNioSSL() {
         val server = NioSSLServer(8081, 5)
         executorService.submit { server.start() }
+        Thread.sleep(1000)
         testClient(NioSSLClient("localhost", 8081))
         server.stop()
         println("Nio SSL successfully tested")

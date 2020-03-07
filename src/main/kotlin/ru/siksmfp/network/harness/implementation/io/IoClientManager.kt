@@ -9,12 +9,6 @@ class IoClientManager(private val clientSocket: Socket) {
     private var printWriter: PrintWriter = PrintWriter(clientSocket.getOutputStream(), false)
     private var bufferedReader: BufferedReader = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
 
-    fun close() {
-        bufferedReader.close()
-        printWriter.close()
-        clientSocket.close()
-    }
-
     fun sentAndReceive(message: String): String {
         printWriter.println(message)
         printWriter.flush()
@@ -28,6 +22,12 @@ class IoClientManager(private val clientSocket: Socket) {
         } else {
             throw IllegalStateException("Sending test is failed")
         }
+    }
+
+    fun close() {
+        bufferedReader.close()
+        printWriter.close()
+        clientSocket.close()
     }
 }
 

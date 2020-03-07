@@ -1,8 +1,8 @@
 package ru.siksmfp.network.harness.implementation.nio.simple.server
 
 import ru.siksmfp.network.harness.api.Handler
-import ru.siksmfp.network.harness.implementation.nio.ssl.server.NioSSLServerContext
 import ru.siksmfp.network.harness.implementation.nio.simple.byteBufferToString
+import ru.siksmfp.network.harness.implementation.nio.ssl.server.NioSSLServerContext
 import tlschannel.NeedsReadException
 import tlschannel.NeedsWriteException
 import java.nio.channels.SelectionKey

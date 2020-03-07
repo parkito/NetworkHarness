@@ -2,57 +2,39 @@ package ru.siksmfp.network.harness.implementation.nio.ssl
 
 import ru.siksmfp.network.harness.api.Client
 import ru.siksmfp.network.harness.implementation.SSLUtils.constructSSLContext
-import ru.siksmfp.network.harness.implementation.nio.simple.byteBufferToString
+import ru.siksmfp.network.harness.implementation.nio.NioClientManager
 import tlschannel.ClientTlsChannel
-import tlschannel.TlsChannel
 import java.net.InetSocketAddress
-import java.nio.ByteBuffer
 import java.nio.channels.SocketChannel
 
 class NioSSLClient(
         private val host: String,
         private val port: Int
 ) : Client<String> {
-
-    private var client: SocketChannel? = null
-    private var tlsClient: TlsChannel? = null
+    private lateinit var clientManager: NioClientManager
 
     override fun start() {
-        println("Connecting nio client to $host:$port")
-        client = SocketChannel.open()
-        client!!.connect(InetSocketAddress(host, port))
-        tlsClient = ClientTlsChannel.newBuilder(client, constructSSLContext()).build()
+        println("Connecting nio ssl client to $host:$port")
+        val client = SocketChannel.open(InetSocketAddress(host, port))
+        val tlsClient = ClientTlsChannel.newBuilder(client, constructSSLContext()).build()
+        clientManager = NioClientManager(tlsClient)
         println("Connected")
     }
 
     @Synchronized
     override fun send(message: String) {
-        tlsClient!!.write(ByteBuffer.wrap(message.toByteArray()))
-        val bb = ByteBuffer.allocate(2)
-        val read = tlsClient!!.read(bb)
-        if (read > 0) {
-            val response = byteBufferToString(bb, read)
-            println("Client received a response $response")
-        }
+        println("Nio ssl sending $message")
+        val response = clientManager.sentAndReceive(message)
+        println("Client nio ssl received a response $response")
     }
 
     override fun test() {
-        println("Testing")
-        tlsClient!!.write(ByteBuffer.wrap("test".toByteArray()))
-        println("Sent")
-        val bb = ByteBuffer.allocate(2)
-        val read = tlsClient!!.read(bb)
-        val response = byteBufferToString(bb, read)
-        if (response == "OK") {
-            println("Test passed")
-        } else {
-            throw IllegalStateException("Sending test is failed")
-        }
+        clientManager.test()
     }
 
     override fun stop() {
-        println("Stopping nio client")
-        client!!.close()
+        println("Stopping nio ssl client")
+        clientManager
     }
 }
 

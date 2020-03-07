@@ -7,6 +7,7 @@ import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLReadHandle
 import ru.siksmfp.network.harness.implementation.nio.simple.server.SSLWriteHandler
 import java.net.InetSocketAddress
 import java.nio.channels.SelectionKey
+import java.nio.channels.SelectionKey.OP_ACCEPT
 import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
 import java.nio.channels.SocketChannel
@@ -39,11 +40,10 @@ class NioSSLServer(
         serverChannel.configureBlocking(false)
         val selector = Selector.open()
         println("Server nio started on $port")
-        serverChannel.register(selector, SelectionKey.OP_ACCEPT)
+        serverChannel.register(selector, OP_ACCEPT)
 
         while (isRunning.get()) {
             selector.select()
-            println("pass block")
             processSelectorAction(selectorActions)
             val keys = selector.selectedKeys()
             val keysIterator = keys.iterator()
