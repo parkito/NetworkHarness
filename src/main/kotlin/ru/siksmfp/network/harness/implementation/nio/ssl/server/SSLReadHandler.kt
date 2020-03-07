@@ -1,6 +1,7 @@
 package ru.siksmfp.network.harness.implementation.nio.simple.server
 
 import ru.siksmfp.network.harness.api.Handler
+import ru.siksmfp.network.harness.implementation.nio.NioServerContext
 import ru.siksmfp.network.harness.implementation.nio.simple.byteBufferToString
 import tlschannel.NeedsReadException
 import tlschannel.NeedsWriteException
@@ -18,19 +19,17 @@ class SSLReadHandler(
         private val clients: MutableMap<SocketChannel, ByteBuffer>,
         private val selectorActions: Queue<Runnable>
 ) : SelectionHandler {
-
     private var handler: Handler<String>? = null
-
     private var executorService: ExecutorService = Executors.newFixedThreadPool(1)
 
     override fun handle(selectionKey: SelectionKey) {
-        val tlsChannel = selectionKey.attachment() as TlsChannel
-        val bb = ByteBuffer.allocate(10000) //todo optimize
-
+        val context = selectionKey.attachment() as NioServerContext
+        val tlsChannel = context.tlsChannel
+        val bb = context.buffer
         try {
-            val read: Int = tlsChannel.read(bb)
+            val read: Int = tlsChannel.read(context.buffer)
             if (read > 0) {
-                val response = byteBufferToString(bb!!, read)
+                val response = byteBufferToString(bb, read)
                 println("NioSSLServer: received $response")
                 handler?.handle(response)
 
@@ -44,9 +43,9 @@ class SSLReadHandler(
             if (read < 0) {
                 tlsChannel.close()
             }
-        } catch (e: NeedsReadException) {
+        } catch (ex: NeedsReadException) {
             selectionKey.interestOps(OP_READ)
-        } catch (e: NeedsWriteException) {
+        } catch (ex: NeedsWriteException) {
             selectionKey.interestOps(OP_WRITE)
         }
     }

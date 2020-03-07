@@ -17,7 +17,6 @@ class SSLWriteHandler(
         println("NioServer: sending response OK")
         if (written == -1) {
             tlsChannel.close()
-//            clients.remove(socketChannel)
             println("Disconnected from in write")
             return
         }
